@@ -41,9 +41,10 @@ the bottom of the screen
 */
 .wrapper {
   width: 95vw;
-  max-width : 90vh;
+  max-width: 90vh;
   background-color: white;
   border-radius: 5%;
+  color: var(--primary);
   /*
     This comes in handy for specifying the
     position of the players.

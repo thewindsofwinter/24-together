@@ -10,9 +10,10 @@ body {
   /* bkg-primary: Deep Orange 900, bkg-secondary: Amber 700 (Material Design) */
   --bkg-primary: #BF360C;
   --bkg-secondary: #FFA000;
-  /* accent: Light Green A200, title: Light Green 100 (Material Design)*/
-  --accent: #B2FF59;
-  --title: #DCEDC8;
+  /* primary: Light Green 900, title: Light Green A200 (Material Design)*/
+  --accent: #FFFFFF;
+  --title: #B2FF59;
+  --primary: #33691E;
 }
 
 a {

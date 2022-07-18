@@ -12,6 +12,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Play 24 <span className={styles.accent}>Together</span></h1>
         <div className={styles.wrapper}>
+          <p>Sample text</p>
           { /* Space for players */ }
         </div>
       </main>
