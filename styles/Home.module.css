@@ -45,6 +45,7 @@ the bottom of the screen
   background-color: white;
   border-radius: 5%;
   color: var(--primary);
+  padding: 5%;
   /*
     This comes in handy for specifying the
     position of the players.
