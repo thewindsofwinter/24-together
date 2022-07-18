@@ -1,9 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Carrois+Gothic+SC&family=Encode+Sans+SC:wght@500&display=swap');
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+  /* bkg-primary: Deep Orange 900, bkg-secondary: Amber 700 (Material Design) */
+  --bkg-primary: #BF360C;
+  --bkg-secondary: #FFA000;
+  /* primary: Light Green 900, title: Light Green A200 (Material Design)*/
+  --accent: #FFFFFF;
+  --title: #B2FF59;
+  --primary: #33691E;
 }
 
 a {
