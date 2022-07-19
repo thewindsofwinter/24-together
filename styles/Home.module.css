@@ -92,22 +92,24 @@ aspect ratio of 4:3 (side areas)
   flex-basis: 1.5rem;
   flex-grow: 0;
   flex-shrink: 0;
+  font-size: 1rem;
 
   display:grid;
   grid-template-rows: auto;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 49% 49%;
+  grid-column-gap: 2%;
   color: white;
 }
 
 .newGame {
   background-color: var(--primary);
-  font-size: 0.75rem;
   padding: 1rem;
+  text-align: center;
 }
 
 .nextSet {
   background-color: var(--primary);
-  font-size: 0.75rem;
   border-radius: 0 0 1rem 0;
   padding: 1rem;
+  text-align: center;
 }
