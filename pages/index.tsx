@@ -10,7 +10,7 @@ interface CardType {
 export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
-  const [cards, setCards] = useState<undefined, CardType[]>();
+  const [cards, setCards] = useState<undefined | CardType[]>();
 
   return (
     <div className={styles.container}>
