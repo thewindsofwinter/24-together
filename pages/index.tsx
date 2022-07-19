@@ -7,10 +7,30 @@ interface CardType {
   value: number;
 }
 
+export function getRandomCards(): CardType[] {
+  const suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
+  let fourCards = [] as CardType[];
+
+  for(var i = 0; i < 4; i++) {
+    fourCards.push({
+      suit: suits[Math.floor(Math.random() * 4)],
+      value: Math.ceil(Math.random() * 13)
+    });
+  }
+
+  return fourCards;
+}
+
 export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
-  const [cards, setCards] = useState<undefined | CardType[]>();
+  const [cards, setCards] = useState<CardType[]>(getRandomCards());
+
+  useEffect(() => {
+    console.log("generating new cards");
+    getRandomCards();
+    console.log(cards);
+  }, [setCount]);
 
   return (
     <div className={styles.container}>
