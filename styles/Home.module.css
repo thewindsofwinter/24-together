@@ -101,6 +101,7 @@ aspect ratio of 4:3 (side areas)
 }
 
 .newGame, .nextSet {
+  user-select: none;
   background-color: var(--primary);
   padding: 1rem;
   text-align: center;
