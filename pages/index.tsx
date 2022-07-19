@@ -17,12 +17,14 @@ export default function Home() {
         <div className={styles.wrapper}>
           <div className={styles.play}></div>
           <div className={styles.actions}>
-            <p className={styles.score}>
-              Score: {score}
-            </p>
-            <button className={styles.nextSet} onClick={() => { setScore(score + 4); }}>
-              Next Set
-            </button>
+            <div className={styles.score}>
+              <p>Score: {score}</p>
+            </div>
+            <div className={styles.controls}>
+              <button className={styles.nextSet} onClick={() => { setScore(score + 4); }}>
+                Next Set
+              </button>
+            </div>
           </div>
         </div>
       </main>
