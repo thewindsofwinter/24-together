@@ -25,8 +25,7 @@ export default function Home() {
           <div className={styles.play}></div>
           <div className={styles.actions}>
             <div className={styles.score}>
-              <div className={styles.counter}>Score: {score}</div>
-              <div className={styles.counter}>Set #: {setCount}</div>
+              Score: {score} | Set #: {setCount}
             </div>
             <div className={styles.controls}>
               <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>

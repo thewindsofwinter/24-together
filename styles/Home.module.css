@@ -85,10 +85,7 @@ aspect ratio of 2:1 (side areas)
   flex-basis: 2rem;
   flex-grow: 1;
   flex-shrink: 1;
-
-  display:grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 50% 50%;
+  text-align: center;
 
   font-size: 1.5rem;
   font-weight: 800;
@@ -121,11 +118,4 @@ aspect ratio of 2:1 (side areas)
 
 .nextSet {
   border-radius: 0 0 1rem 0;
-}
-
-.counter {
-  margin: 0;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-  display: inline-block;
 }
