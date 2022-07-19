@@ -25,11 +25,13 @@
 }
 
 .title {
+  width: 95vw;
+  max-width: 96vh;
   color: var(--title);
   font-family: "Encode Sans SC", sans-serif;
   text-transform: capitalize;
-  font-size: min(6vh, 4rem);
-  text-align: center;
+  font-size: min(6.25vh, 4rem);
+  text-align:right;
   margin-top: 0;
   margin-bottom: 2vh;
 }
