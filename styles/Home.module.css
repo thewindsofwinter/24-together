@@ -45,14 +45,13 @@ the bottom of the screen
   background-color: white;
   border-radius: 5%;
   color: var(--primary);
-  padding: 5%;
   /*
     This comes in handy for specifying the
     position of the players.
    */
   display: grid;
   grid-template-rows: auto;
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 70% 30%;
 }
 
 /*
@@ -64,6 +63,21 @@ aspect ratio of 4:3 (side areas)
   content: "";
   display: block;
   padding-bottom: 75%;
+}
+
+.play {
+
+}
+
+.actions {
+  background-color: var(--title);
+  height:100%;
+  border-radius: 0 5% 5% 0;
+}
+
+.score {
+  font-weight: 800;
+  font-size: 2rem;
 }
 
 .nextSet {
