@@ -26,11 +26,11 @@
 
 .title {
   width: 95vw;
-  max-width: 96vh;
+  max-width: 140vh;
   color: var(--title);
   font-family: "Encode Sans SC", sans-serif;
   text-transform: capitalize;
-  font-size: min(6.25vh, 4rem);
+  font-size: min(7.5vh, 5rem);
   text-align:right;
   margin-top: 0;
   margin-bottom: 2vh;
@@ -42,8 +42,9 @@ should never be so wide as to go off
 the bottom of the screen
 */
 .wrapper {
+  font-family: "Open Sans", sans-serif;
   width: 95vw;
-  max-width: 96vh;
+  max-width: 140vh;
   background-color: white;
   border-radius: 1rem;
   color: var(--primary);
@@ -57,31 +58,64 @@ the bottom of the screen
 /*
 Set a padding bottom on the pseudo
 after class to give the .board an
-aspect ratio of 4:3 (side areas)
+aspect ratio of 2:1 (side areas)
 */
 .wrapper:after {
   content: "";
   display: block;
-  padding-bottom: 75%;
+  padding-bottom: 50%;
 }
 
 .play {
-  flex-basis: 70%;
+  flex-basis: 75%;
   padding: 1rem;
 }
 
 .actions {
-  flex-basis: 30%;
-  background-color: var(--title);
+  flex-basis: 25%;
+  background-color: var(--accent);
   border-radius: 0 1rem 1rem 0;
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .score {
+  padding: 1rem;
+  color: black;
+  flex-basis: 2rem;
+  flex-grow: 1;
+  flex-shrink: 1;
+  text-align: center;
+
+  font-size: 1.5rem;
   font-weight: 800;
-  font-size: 2rem;
+}
+
+.controls {
+  flex-basis: 1.5rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+
+  display:grid;
+  grid-template-rows: auto;
+  grid-template-columns: 50% 50%;
+  color: white;
+}
+
+.newGame, .nextSet {
+  user-select: none;
+  background-color: var(--primary);
+  padding: 1rem;
+  text-align: center;
+  transition: background-color 0.5s;
+}
+
+.newGame:hover, .nextSet:hover {
+  background-color: black;
+  transition: background-color 0.5s;
 }
 
 .nextSet {
-
+  border-radius: 0 0 1rem 0;
 }
