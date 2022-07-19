@@ -28,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log("generating new cards");
-    getRandomCards();
+    setCards(getRandomCards());
     console.log(cards);
   }, [setCount]);
 
@@ -48,7 +48,7 @@ export default function Home() {
               Score: {score} | Set #: {setCount}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
+              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
                 New Game
               </div>
               <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>
