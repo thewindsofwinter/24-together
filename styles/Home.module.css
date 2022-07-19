@@ -50,6 +50,9 @@ the bottom of the screen
     This comes in handy for specifying the
     position of the players.
    */
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 80% 20%;
 }
 
 /*
@@ -61,4 +64,8 @@ aspect ratio of 4:3 (side areas)
   content: "";
   display: block;
   padding-bottom: 75%;
+}
+
+.nextSet {
+
 }
