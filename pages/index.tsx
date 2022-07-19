@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css'
 
 export default function Home() {
   const [score, setScore] = useState<number>(0);
+  const [setCount, setSetCount] = useState<number>(0);
 
   return (
     <div className={styles.container}>
@@ -18,13 +19,14 @@ export default function Home() {
           <div className={styles.play}></div>
           <div className={styles.actions}>
             <div className={styles.score}>
-              <p>Score: {score}</p>
+              <p className={styles.counter}>Score: {score}</p>
+              <p className={styles.counter}>Set #: {setCount}</p>
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { setScore(0); }}>
+              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
                 New Game
               </div>
-              <div className={styles.nextSet} onClick={() => { setScore(score + 4); }}>
+              <div className={styles.nextSet} onClick={() => { setSetCount(score + 1); }}>
                 Next Set
               </div>
             </div>
