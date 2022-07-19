@@ -72,16 +72,19 @@ aspect ratio of 4:3 (side areas)
 
 .actions {
   flex-basis: 30%;
-  background-color: var(--title);
+  background-color: var(--accent);
   border-radius: 0 1rem 1rem 0;
   padding: 1rem;
 }
 
 .score {
+  color: var(--primary);
   font-weight: 800;
   font-size: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .nextSet {
-
+  background-color: var(--primary);
 }

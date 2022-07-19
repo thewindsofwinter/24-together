@@ -13,7 +13,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Play 24 <span className={styles.accent}>Together</span></h1>
+        <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
         <div className={styles.wrapper}>
           <div className={styles.play}></div>
           <div className={styles.actions}>
