@@ -26,11 +26,11 @@
 
 .title {
   width: 95vw;
-  max-width: 110vh;
+  max-width: 140vh;
   color: var(--title);
   font-family: "Encode Sans SC", sans-serif;
   text-transform: capitalize;
-  font-size: min(7vh, 5rem);
+  font-size: min(7.5vh, 5rem);
   text-align:right;
   margin-top: 0;
   margin-bottom: 2vh;
@@ -44,7 +44,7 @@ the bottom of the screen
 .wrapper {
   font-family: "Open Sans", sans-serif;
   width: 95vw;
-  max-width: 110vh;
+  max-width: 140vh;
   background-color: white;
   border-radius: 1rem;
   color: var(--primary);
@@ -58,21 +58,21 @@ the bottom of the screen
 /*
 Set a padding bottom on the pseudo
 after class to give the .board an
-aspect ratio of 5:3 (side areas)
+aspect ratio of 2:1 (side areas)
 */
 .wrapper:after {
   content: "";
   display: block;
-  padding-bottom: 60%;
+  padding-bottom: 50%;
 }
 
 .play {
-  flex-basis: 70%;
+  flex-basis: 75%;
   padding: 1rem;
 }
 
 .actions {
-  flex-basis: 30%;
+  flex-basis: 25%;
   background-color: var(--accent);
   border-radius: 0 1rem 1rem 0;
   display: flex;
