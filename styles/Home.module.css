@@ -42,6 +42,7 @@ should never be so wide as to go off
 the bottom of the screen
 */
 .wrapper {
+  font-family: "Open Sans", sans-serif;
   width: 95vw;
   max-width: 96vh;
   background-color: white;
@@ -79,12 +80,16 @@ aspect ratio of 4:3 (side areas)
 
 .score {
   color: var(--primary);
-  font-weight: 800;
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
 .nextSet {
   background-color: var(--primary);
+  font-size: 1.5rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-family: "Open Sans", sans-serif;
 }

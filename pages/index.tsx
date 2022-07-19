@@ -18,7 +18,7 @@ export default function Home() {
           <div className={styles.play}></div>
           <div className={styles.actions}>
             <p className={styles.score}>
-              Your Score: {score}
+              Score: {score}
             </p>
             <button className={styles.nextSet} onClick={() => { setScore(score + 4); }}>
               Next Set
