@@ -82,7 +82,6 @@ aspect ratio of 4:3 (side areas)
 .score {
   padding: 1rem;
   color: black;
-  font-size: 1.5rem;
   flex-basis: 2rem;
   flex-grow: 1;
   flex-shrink: 1;
@@ -115,4 +114,10 @@ aspect ratio of 4:3 (side areas)
 
 .nextSet {
   border-radius: 0 0 1rem 0;
+}
+
+.counter {
+  font-size: 1.5rem;
+  line-height: 1.5;
+  margin: 0;
 }

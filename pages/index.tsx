@@ -26,7 +26,7 @@ export default function Home() {
               <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
                 New Game
               </div>
-              <div className={styles.nextSet} onClick={() => { setSetCount(score + 1); }}>
+              <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>
                 Next Set
               </div>
             </div>
