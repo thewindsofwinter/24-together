@@ -85,6 +85,15 @@ aspect ratio of 4:3 (side areas)
   flex-basis: 2rem;
   flex-grow: 1;
   flex-shrink: 1;
+
+  display:grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 50% 50%;
+}
+
+/* not after last child, add seperator */
+.score:not(:last-child):after {
+  content: "|";
 }
 
 .controls {
@@ -118,6 +127,8 @@ aspect ratio of 4:3 (side areas)
 
 .counter {
   font-size: 1.5rem;
-  line-height: 1.5;
+  font-weight: 800;
   margin: 0;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
