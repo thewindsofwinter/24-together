@@ -89,9 +89,6 @@ aspect ratio of 4:3 (side areas)
 }
 
 .controls {
-  background-color: var(--primary);
-  border-radius: 0 0 1rem 0;
-  padding: 1rem;
   flex-basis: 1.5rem;
   flex-grow: 0;
   flex-shrink: 0;
@@ -103,10 +100,14 @@ aspect ratio of 4:3 (side areas)
 }
 
 .newGame {
-
+  background-color: var(--primary);
+  font-size: 0.75rem;
+  padding: 1rem;
 }
 
 .nextSet {
   background-color: var(--primary);
   font-size: 0.75rem;
+  border-radius: 0 0 1rem 0;
+  padding: 1rem;
 }
