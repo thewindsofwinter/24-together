@@ -25,6 +25,7 @@ export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>(getRandomCards());
+  const [submitText, setSubmitText] = useState<string>("I found 24!");
 
   useEffect(() => {
     console.log("generating new cards");
@@ -42,7 +43,12 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
         <div className={styles.wrapper}>
-          <div className={styles.play}></div>
+          <div className={styles.play}>
+            <div className={styles.inputBar}>
+              <input className={styles.input}></input>
+              <button className={styles.toggleSubmit}>{submitText}</button>
+            </div>
+          </div>
           <div className={styles.actions}>
             <div className={styles.score}>
               Score: {score} | Set #: {setCount}

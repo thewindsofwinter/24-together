@@ -119,3 +119,16 @@ aspect ratio of 2:1 (side areas)
 .nextSet {
   border-radius: 0 0 1rem 0;
 }
+
+.inputBar {
+  width: 100%;
+  display: flex;
+}
+
+.input {
+
+}
+
+.toggleSubmit {
+
+}
