@@ -83,12 +83,18 @@ aspect ratio of 2:1 (side areas)
   padding: 1rem;
   color: black;
   flex-basis: 2rem;
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex-grow: 0;
+  flex-shrink: 0;
   text-align: center;
 
   font-size: 1.5rem;
   font-weight: 800;
+}
+
+.history {
+  flex-basis: 2rem;
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 
 .controls {

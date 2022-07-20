@@ -155,6 +155,8 @@ export default function Home() {
             <div className={styles.score}>
               Score: {score} | Set #: {setCount}
             </div>
+            <div className={styles.history}>
+            </div>
             <div className={styles.controls}>
               <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
                 New Game
