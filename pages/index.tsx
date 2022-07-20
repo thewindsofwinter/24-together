@@ -8,6 +8,12 @@ interface CardType {
   value: number;
 }
 
+interface RoundInfo {
+  values: CardType[];
+  color: number;
+  message: string;
+}
+
 export function getRandomCards(): CardType[] {
   const suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
   let fourCards = [] as CardType[];
@@ -22,13 +28,13 @@ export function getRandomCards(): CardType[] {
   return fourCards;
 }
 
-export function verifyOperations(input: string, cards: CardType[]): bool {
+export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("recieved " + input)
   for(var i = 0; i < input.length; i++) {
     let char = input.charAt(i);
     if(char !== '+' && char !== '-' && char !== '*' && char !== '/' && char !== '('
         && char !== ')' && char !== ' ' && !(char >= '0' && char <= '9')) {
-          return false;
+          return "invalid-Bad Character";
     }
   }
 
@@ -48,24 +54,29 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
       }
 
       if(!ok) {
-        return false;
+        return "invalid-Extra Number";
       }
     }
   }
 
   for(var i = 0; i < 4; i++) {
     if(!found[i]) {
-      return false;
+      return "invalid-Missing Number";
     }
   }
 
   try {
     let val = mexp.eval(input);
     console.log("valid and evaluated: " + val);
-    return val === 24;
+    if(val === 24) {
+      return "correct"
+    }
+    else {
+      return "incorrect"
+    }
   }
   catch(e){
-    return false;
+    return "invalid-Bad Expression";
   }
 }
 
@@ -73,6 +84,7 @@ export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
+  const [rounds, setRounds] = useState<RoundInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
 
@@ -104,7 +116,17 @@ export default function Home() {
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input").value;
-                setSubmitText(verifyOperations(input, cards).toString());
+                let code = setSubmitText(verifyOperations(input, cards).toString()).split('-');
+
+                if(code[0] == "correct") {
+
+                }
+                else if(code[0] == "incorrect") {
+
+                }
+                else {
+
+                }
               }}>{submitText}</button>
             </div>
 
