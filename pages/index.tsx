@@ -2,6 +2,7 @@ import Head from 'next/head'
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
+import Card from '../components/card'
 
 interface CardType {
   suit: string;
@@ -109,9 +110,12 @@ export default function Home() {
         <div className={styles.wrapper}>
           <div className={styles.play}>
             <div className={styles.displayCards}>
-              {cards.map((card, index) => (
-                <p key={"card-" + index.toString()}>{card.value}</p>
-              ))}
+              <div className="flex flex-wrap -mb-4 -mx-2 w-full">
+                  <Card suit="diamonds" val={5}></Card>
+                  <Card suit="spades" val={5}></Card>
+                  <Card suit="clubs" val={5}></Card>
+                  <Card suit="hearts" val={5}></Card>
+              </div>
             </div>
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
