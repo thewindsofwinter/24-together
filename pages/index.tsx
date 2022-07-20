@@ -112,7 +112,7 @@ export default function Home() {
             <div className={styles.displayCards}>
               <div className="flex flex-wrap -mb-4 -mx-2 w-full">
               {cards.map((card, index) => (
-                <Card suit={card.suit} val={card.value}></Card>
+                <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
               ))}
               </div>
             </div>
