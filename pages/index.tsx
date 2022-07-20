@@ -44,6 +44,7 @@ export default function Home() {
         <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
         <div className={styles.wrapper}>
           <div className={styles.play}>
+            <div className={styles.displayCards}></div>
             <div className={styles.inputBar}>
               <input className={styles.input}></input>
               <button className={styles.toggleSubmit}>{submitText}</button>
