@@ -28,6 +28,8 @@ export default function Home() {
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
 
+  // head off hydration problem
+  useEffect(() => setCards(getRandomCards()), [])
   useEffect(() => {
     console.log("generating new cards");
     setCards(getRandomCards());
@@ -45,7 +47,11 @@ export default function Home() {
         <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
         <div className={styles.wrapper}>
           <div className={styles.play}>
-            <div className={styles.displayCards}></div>
+            <div className={styles.displayCards}>
+              {cards.map((card) => (
+                <p>{card.value}</p>
+              ))}
+            </div>
             <div className={styles.inputBar}>
               <input className={styles.input}></input>
               <button className={styles.toggleSubmit}>{submitText}</button>
@@ -55,7 +61,7 @@ export default function Home() {
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
               parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
-              opponents to win the round!&nbsp; 
+              opponents to win the round!&nbsp;
               <a className={styles.hideButton} onClick={() =>
                 { document.getElementById("instructions").style.display = "none"; }
               }>[hide]</a>
