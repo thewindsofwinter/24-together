@@ -124,20 +124,24 @@ aspect ratio of 2:1 (side areas)
   margin-left: 10%;
   margin-right: 10%;
   width: 80%;
-  height: 3rem;
   border-radius: 1rem;
   display: flex;
 }
 
+.input, .toggleSubmit {
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
 .input {
-  border: 2px var(--primary) solid;
+  border: 4px var(--primary) solid;
   border-radius: 1rem 0 0 1rem;
   flex-basis: 80%;
 }
 
 .toggleSubmit {
-  font-size: 1.5rem;
   border: none;
   border-radius: 0 1rem 1rem 0;
   flex-basis: 20%;
+  color: white;
 }
