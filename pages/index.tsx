@@ -122,7 +122,7 @@ export default function Home() {
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
 
-                let code = verifyOperations(input, cards).split('-');
+                let code = verifyOperations(input.value, cards).split('-');
                 let thisRound = {
                   values: cards,
                   color: 0,
