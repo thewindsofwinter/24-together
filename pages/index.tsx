@@ -101,7 +101,8 @@ export default function Home() {
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input").value;
-                setSubmitText(verifyOperations(input, cards));
+                console.log(verifyOperations(input, cards));
+                setSubmitText(verifyOperations(input, cards).toString());
               }}>{submitText}</button>
             </div>
 
