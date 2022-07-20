@@ -31,7 +31,7 @@ export function getRandomCards(): CardType[] {
 }
 
 export function verifyOperations(input: string, cards: CardType[]): string {
-  console.log("recieved " + input)
+  console.log("received " + input)
   for(var i = 0; i < input.length; i++) {
     let char = input.charAt(i);
     if(char !== '+' && char !== '-' && char !== '*' && char !== '/' && char !== '('
@@ -142,6 +142,11 @@ export default function Home() {
                   thisRound.color = 2;
                 }
                 setRounds([...rounds, thisRound]);
+
+                if(rounds.length > 6) {
+                  setRounds(rounds.slice(-6))
+                }
+
                 setSetCount(setCount + 1);
                 input.value = "";
               }}>{submitText}</button>
