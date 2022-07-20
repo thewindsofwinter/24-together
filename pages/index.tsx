@@ -117,15 +117,22 @@ export default function Home() {
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input").value;
                 let code = setSubmitText(verifyOperations(input, cards).toString()).split('-');
+                let thisRound = {
+                  values: cards,
+                  color: 0,
+                  message: ""
+                }
 
                 if(code[0] == "correct") {
-
+                  thisRound.message = "Correct!";
                 }
                 else if(code[0] == "incorrect") {
-
+                  thisRound.message = "Incorrect!";
+                  thisRound.color = 1;
                 }
                 else {
-
+                  thisRound.message = "Invalid: " + code[1];
+                  thisRound.color = 2;
                 }
               }}>{submitText}</button>
             </div>
