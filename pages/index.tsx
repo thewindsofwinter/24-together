@@ -188,10 +188,9 @@ export default function Home() {
 }
 
 export function HistoryInfo(props: RoundInfo) {
-  console.log(props.data);
   return (
-    <div>
-      <div>{props.data.values.map((card, index) => (
+    <div className="historyBox">
+      <div className="flex flex-wrap -mb-4 -mx-0.5 w-full">{props.data.values.map((card, index) => (
         <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
       ))}</div>
       <p>{props.data.query}</p>
