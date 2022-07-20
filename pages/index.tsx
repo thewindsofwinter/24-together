@@ -168,7 +168,7 @@ export default function Home() {
             </div>
             <div className={styles.history}>
             {rounds.map((round, index) => (
-              <p key={"history-" + index.toString()}>{round.message}</p>
+              <HistoryInfo key={"history-" + index.toString()} data={history}/>
             ))}
             </div>
             <div className={styles.controls}>
@@ -184,4 +184,16 @@ export default function Home() {
       </main>
     </div>
   )
+}
+
+export function HistoryPreview(props: RoundInfo) {
+  return (
+    <div>
+      <div>{props.data.values.map((card, index) => (
+        <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
+      ))}</div>
+      <p>{props.data.query}</p>
+      <p>{props.data.message}</p>
+    </div>
+  );
 }
