@@ -21,6 +21,10 @@ export function getRandomCards(): CardType[] {
   return fourCards;
 }
 
+export function verifyOperations(input: string, cards: CardType[]): bool {
+
+}
+
 export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
