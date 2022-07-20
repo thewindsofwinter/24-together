@@ -134,6 +134,7 @@ aspect ratio of 2:1 (side areas)
 }
 
 .input {
+  font-family: monospace;
   border: 4px var(--primary) solid;
   border-radius: 1rem 0 0 1rem;
   flex-basis: 80%;
@@ -147,5 +148,5 @@ aspect ratio of 2:1 (side areas)
 }
 
 .displayCards {
-  
+
 }

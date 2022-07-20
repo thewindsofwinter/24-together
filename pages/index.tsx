@@ -25,6 +25,7 @@ export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>(getRandomCards());
+  // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
 
   useEffect(() => {
@@ -48,6 +49,11 @@ export default function Home() {
             <div className={styles.inputBar}>
               <input className={styles.input}></input>
               <button className={styles.toggleSubmit}>{submitText}</button>
+            </div>
+            <div className={styles.instructions}>
+              Enter the point values of all four cards with a valid mathematical
+              combination of parentheses [(, )] and operators [+, -, *, /] that
+              evaluates to 24. Then click the submit button.
             </div>
           </div>
           <div className={styles.actions}>
