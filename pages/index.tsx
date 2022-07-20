@@ -137,6 +137,7 @@ export default function Home() {
                 }
                 setRounds([...rounds, thisRound]);
                 setSetCount(setCount + 1);
+                document.getElementById("input").value = "";
               }}>{submitText}</button>
             </div>
 
