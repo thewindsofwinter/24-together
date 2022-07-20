@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
+import mexp from 'math-expression-evaluator'
 
 interface CardType {
   suit: string;
@@ -22,7 +23,22 @@ export function getRandomCards(): CardType[] {
 }
 
 export function verifyOperations(input: string, cards: CardType[]): bool {
+  for (var i = 0; i < input.length; i++) {
+    let char = input.charAt(i);
+    if(char != '+' && char != '-' && char != '*' && char != '/' && char != '('
+        && char != ')' && !(c >= '0' && c <= '9')) {
+          return false;
+    }
+  }
 
+
+  try {
+
+    val = mexp.eval(input);
+  }
+  catch(e){
+    return false;
+  }
 }
 
 export default function Home() {
