@@ -93,15 +93,14 @@ export default function Home() {
         <div className={styles.wrapper}>
           <div className={styles.play}>
             <div className={styles.displayCards}>
-              {cards.map((card) => (
-                <p>{card.value}</p>
+              {cards.map((card, index) => (
+                <p key={"card-" + index.toString()}>{card.value}</p>
               ))}
             </div>
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input").value;
-                console.log(verifyOperations(input, cards));
                 setSubmitText(verifyOperations(input, cards).toString());
               }}>{submitText}</button>
             </div>
