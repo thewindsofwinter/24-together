@@ -149,10 +149,10 @@ aspect ratio of 2:1 (side areas)
 
 .displayCards {
   flex-basis: 80%;
+  flex-grow: 1;
 }
 
 .instructions {
-  flex-basis: 5%;
   font-size: 0.75rem;
   width: 90%;
   margin-left: auto;
@@ -163,4 +163,8 @@ aspect ratio of 2:1 (side areas)
 .play {
   display: flex;
   flex-direction: column;
+}
+
+.hideButton {
+  text-decoration: underline;
 }

@@ -46,15 +46,19 @@ export default function Home() {
         <div className={styles.wrapper}>
           <div className={styles.play}>
             <div className={styles.displayCards}></div>
-            <div className={styles.instructions}>
+            <div className={styles.inputBar}>
+              <input className={styles.input}></input>
+              <button className={styles.toggleSubmit}>{submitText}</button>
+            </div>
+
+            <div className={styles.instructions} id="instructions">
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
               parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
               opponents to win the round!
-            </div>
-            <div className={styles.inputBar}>
-              <input className={styles.input}></input>
-              <button className={styles.toggleSubmit}>{submitText}</button>
+              <a className={styles.hideButton} onClick={() =>
+                { document.getElementById("instructions").style.display = "none"; }
+              }>[hide]</a>
             </div>
           </div>
           <div className={styles.actions}>
