@@ -3,17 +3,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card from '../components/card'
+import HistoryInfo, RoundInfo from { '../components/history' }
 
 interface CardType {
   suit: string;
   value: number;
-}
-
-interface RoundInfo {
-  values: CardType[];
-  color: number;
-  message: string;
-  query: string;
 }
 
 export function getRandomCards(): CardType[] {
@@ -185,16 +179,4 @@ export default function Home() {
       </main>
     </div>
   )
-}
-
-export function HistoryInfo(props: RoundInfo) {
-  return (
-    <div className="historyBox">
-      <div className="flex flex-wrap -mb-4 -mx-0.5 w-full">{props.data.values.map((card, index) => (
-        <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
-      ))}</div>
-      <p>{props.data.query}</p>
-      <p>{props.data.message}</p>
-    </div>
-  );
 }

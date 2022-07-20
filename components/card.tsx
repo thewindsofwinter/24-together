@@ -20,7 +20,7 @@ const card = ({ val, suit }: Props) => {
 
     return (
         <div
-            className="p-2 w-1/4">
+            className="p-[1%] w-1/4">
             {cardIcon}
         </div>
     )
