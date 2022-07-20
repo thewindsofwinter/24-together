@@ -111,7 +111,7 @@ aspect ratio of 2:1 (side areas)
   transition: background-color 0.5s;
 }
 
-.newGame:hover, .nextSet:hover, .toggleSubmit {
+.newGame:hover, .nextSet:hover, .toggleSubmit:hover {
   background-color: black;
   transition: background-color 0.5s;
 }
