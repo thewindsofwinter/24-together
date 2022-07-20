@@ -17,7 +17,7 @@ interface RoundInfo {
 }
 
 export function getRandomCards(): CardType[] {
-  const suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
+  const suits = ["spades", "hearts", "diamonds", "clubs"];
   let fourCards = [] as CardType[];
 
   for(var i = 0; i < 4; i++) {
@@ -111,10 +111,9 @@ export default function Home() {
           <div className={styles.play}>
             <div className={styles.displayCards}>
               <div className="flex flex-wrap -mb-4 -mx-2 w-full">
-                  <Card suit="diamonds" val={5}></Card>
-                  <Card suit="spades" val={5}></Card>
-                  <Card suit="clubs" val={5}></Card>
-                  <Card suit="hearts" val={5}></Card>
+              {cards.map((card, index) => (
+                <Card suit={card.suit} val={card.value}></Card>
+              ))}
               </div>
             </div>
             <div className={styles.inputBar}>
