@@ -23,7 +23,7 @@ export function getRandomCards(): CardType[] {
 }
 
 export function verifyOperations(input: string, cards: CardType[]): bool {
-  console.log(input)
+  console.log("recieved " + input)
   for(var i = 0; i < input.length; i++) {
     let char = input.charAt(i);
     if(char !== '+' && char !== '-' && char !== '*' && char !== '/' && char !== '('
@@ -35,7 +35,6 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
   // Check if the string can be split for cards
   let found = [false, false, false, false]
   let tokens = input.split(/\D/)
-  console.log("hi")
   for(var i = 0; i < tokens.length; i++) {
     if(tokens[i] !== "") {
       let val = parseInt(tokens[i]);
@@ -49,7 +48,6 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
       }
 
       if(!ok) {
-        console.log("RIP")
         return false;
       }
     }
@@ -57,19 +55,16 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
 
   for(var i = 0; i < 4; i++) {
     if(!found[i]) {
-      console.log("RIPP")
       return false;
     }
   }
 
-  console.log("h12")
   try {
     let val = mexp.eval(input);
-    console.log(val);
+    console.log("valid and evaluated: " + val);
     return val === 24;
   }
   catch(e){
-    console.log(e)
     return false;
   }
 }
