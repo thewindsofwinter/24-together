@@ -26,14 +26,17 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
   for (var i = 0; i < input.length; i++) {
     let char = input.charAt(i);
     if(char != '+' && char != '-' && char != '*' && char != '/' && char != '('
-        && char != ')' && !(c >= '0' && c <= '9')) {
+        && char != ')' && char != ' ' && !(c >= '0' && c <= '9')) {
           return false;
     }
   }
 
+  // Check if the string can be split for cards
+  let found = [false, false, false, false]
+  let tokens =
+
 
   try {
-
     val = mexp.eval(input);
   }
   catch(e){
