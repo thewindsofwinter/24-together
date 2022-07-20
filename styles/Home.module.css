@@ -123,6 +123,8 @@ aspect ratio of 2:1 (side areas)
 .inputBar {
   margin-left: 5%;
   margin-right: 5%;
+  margin-bottom: 0.75rem;
+
   width: 90%;
   border-radius: 1rem;
   display: flex;
@@ -157,7 +159,6 @@ aspect ratio of 2:1 (side areas)
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 0.75rem;
 }
 
 .play {
@@ -168,10 +169,11 @@ aspect ratio of 2:1 (side areas)
 .hideButton {
   text-decoration: underline;
   user-select: none;
-  transition: color 0.5s;
+  transition: color 0.5s, font-weight 0.5s;
 }
 
 .hideButton:hover {
+  font-weight: 800;
   color: black;
-  transition: color 0.5s;
+  transition: color 0.5s, font-weight 0.5s;
 }
