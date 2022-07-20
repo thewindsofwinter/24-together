@@ -23,10 +23,10 @@ export function getRandomCards(): CardType[] {
 }
 
 export function verifyOperations(input: string, cards: CardType[]): bool {
-  for (var i = 0; i < input.length; i++) {
+  for(var i = 0; i < input.length; i++) {
     let char = input.charAt(i);
-    if(char != '+' && char != '-' && char != '*' && char != '/' && char != '('
-        && char != ')' && char != ' ' && !(c >= '0' && c <= '9')) {
+    if(char !== '+' && char !== '-' && char !== '*' && char !== '/' && char !== '('
+        && char !== ')' && char !== ' ' && !(c >= '0' && c <= '9')) {
           return false;
     }
   }
@@ -34,16 +34,32 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
   // Check if the string can be split for cards
   let found = [false, false, false, false]
   let tokens = input.split(/\D/)
-  for (var i = 0; i < tokens.length; i++) {
-    if(tokens[i] != "") {
-      let val = parseInt(tokens[i])
-      
+  for(var i = 0; i < tokens.length; i++) {
+    if(tokens[i] !== "") {
+      let val = parseInt(tokens[i]);
+      let ok = false;
+      for(var j = 0; j < 4; j++) {
+        if(!found[j] && cards[j].value === val) {
+          found[j] = true;
+          ok = true;
+        }
+      }
+
+      if(!ok) {
+        return false;
+      }
     }
   }
 
+  for(var i = 0; i < 4; i++) {
+    if(found[i] === false) {
+      return false;
+    }
+  }
 
   try {
     val = mexp.eval(input);
+    return val === 24;
   }
   catch(e){
     return false;
