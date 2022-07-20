@@ -120,13 +120,14 @@ export default function Home() {
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
-                let input = document.getElementById("input").value;
+                let input = document.getElementById("input") as HTMLInputElement;
+
                 let code = verifyOperations(input, cards).split('-');
                 let thisRound = {
                   values: cards,
                   color: 0,
                   message: "",
-                  query: input
+                  query: input.value
                 }
 
                 if(code[0] == "correct") {
@@ -143,7 +144,7 @@ export default function Home() {
                 }
                 setRounds([...rounds, thisRound]);
                 setSetCount(setCount + 1);
-                document.getElementById("input").value = "";
+                input.value = "";
               }}>{submitText}</button>
             </div>
 
