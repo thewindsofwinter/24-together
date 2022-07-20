@@ -56,17 +56,20 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
   }
 
   for(var i = 0; i < 4; i++) {
-    if(found[i] === false) {
+    if(!found[i]) {
+      console.log("RIPP")
       return false;
     }
   }
 
+  console.log("h12")
   try {
-    val = mexp.eval(input);
+    let val = mexp.eval(input);
     console.log(val);
     return val === 24;
   }
   catch(e){
+    console.log(e)
     return false;
   }
 }
