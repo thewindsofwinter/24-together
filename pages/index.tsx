@@ -116,7 +116,7 @@ export default function Home() {
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input").value;
-                let code = setSubmitText(verifyOperations(input, cards).toString()).split('-');
+                let code = verifyOperations(input, cards).split('-');
                 let thisRound = {
                   values: cards,
                   color: 0,
