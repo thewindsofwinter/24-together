@@ -128,6 +128,7 @@ export default function Home() {
                   message: "",
                   query: input.value
                 }
+                console.log(thisRound)
 
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
@@ -141,7 +142,7 @@ export default function Home() {
                   thisRound.message = "Invalid: " + code[1];
                   thisRound.color = 2;
                 }
-                setRounds([...rounds, thisRound]);
+                setRounds([...rounds, thisRound as RoundInfo]);
 
                 if(rounds.length > 6) {
                   setRounds(rounds.slice(-6))
@@ -168,7 +169,7 @@ export default function Home() {
             </div>
             <div className={styles.history}>
             {rounds.map((round, index) => (
-              <HistoryInfo key={"history-" + index.toString()} data={history}/>
+              <HistoryInfo key={"history-" + index.toString()} data={round}/>
             ))}
             </div>
             <div className={styles.controls}>
@@ -186,7 +187,8 @@ export default function Home() {
   )
 }
 
-export function HistoryPreview(props: RoundInfo) {
+export function HistoryInfo(props: RoundInfo) {
+  console.log(props.data);
   return (
     <div>
       <div>{props.data.values.map((card, index) => (
