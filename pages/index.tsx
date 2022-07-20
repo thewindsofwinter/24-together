@@ -26,7 +26,7 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
   for(var i = 0; i < input.length; i++) {
     let char = input.charAt(i);
     if(char !== '+' && char !== '-' && char !== '*' && char !== '/' && char !== '('
-        && char !== ')' && char !== ' ' && !(c >= '0' && c <= '9')) {
+        && char !== ')' && char !== ' ' && !(char >= '0' && char <= '9')) {
           return false;
     }
   }
@@ -98,8 +98,11 @@ export default function Home() {
               ))}
             </div>
             <div className={styles.inputBar}>
-              <input className={styles.input}></input>
-              <button className={styles.toggleSubmit}>{submitText}</button>
+              <input className={styles.input} id="input"></input>
+              <button className={styles.toggleSubmit} onClick={() => {
+                let input = document.getElementById("input").value;
+                setSubmitText(verifyOperations(input, cards));
+              }}>{submitText}</button>
             </div>
 
             <div className={styles.instructions} id="instructions">
