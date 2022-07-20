@@ -33,7 +33,13 @@ export function verifyOperations(input: string, cards: CardType[]): bool {
 
   // Check if the string can be split for cards
   let found = [false, false, false, false]
-  let tokens =
+  let tokens = input.split(/\D/)
+  for (var i = 0; i < tokens.length; i++) {
+    if(tokens[i] != "") {
+      let val = parseInt(tokens[i])
+      
+    }
+  }
 
 
   try {
