@@ -150,3 +150,8 @@ aspect ratio of 2:1 (side areas)
 .displayCards {
 
 }
+
+.play {
+  display: flex;
+  flex-direction: column;
+}
