@@ -125,6 +125,7 @@ export default function Home() {
 
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
+                  setScore(score + 1);
                 }
                 else if(code[0] == "incorrect") {
                   thisRound.message = "Incorrect!";
@@ -134,6 +135,8 @@ export default function Home() {
                   thisRound.message = "Invalid: " + code[1];
                   thisRound.color = 2;
                 }
+                setRounds([...rounds, thisRound]);
+                setSetCount(setCount + 1);
               }}>{submitText}</button>
             </div>
 
