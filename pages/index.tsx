@@ -51,9 +51,10 @@ export default function Home() {
               <button className={styles.toggleSubmit}>{submitText}</button>
             </div>
             <div className={styles.instructions}>
-              Enter the point values of all four cards with a valid mathematical
-              combination of parentheses [(, )] and operators [+, -, *, /] that
-              evaluates to 24. Then click the submit button.
+              <strong>Instructions:</strong> For each round, enter the point values of all four cards
+              with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
+              parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
+              opponents to win the round!
             </div>
           </div>
           <div className={styles.actions}>
