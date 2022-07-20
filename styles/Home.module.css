@@ -167,4 +167,11 @@ aspect ratio of 2:1 (side areas)
 
 .hideButton {
   text-decoration: underline;
+  user-select: none;
+  transition: color 0.5s;
+}
+
+.hideButton:hover {
+  color: black;
+  transition: color 0.5s;
 }
