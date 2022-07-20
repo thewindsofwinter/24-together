@@ -12,6 +12,7 @@ interface RoundInfo {
   values: CardType[];
   color: number;
   message: string;
+  query: string;
 }
 
 export function getRandomCards(): CardType[] {
@@ -120,7 +121,8 @@ export default function Home() {
                 let thisRound = {
                   values: cards,
                   color: 0,
-                  message: ""
+                  message: "",
+                  query: input
                 }
 
                 if(code[0] == "correct") {
@@ -156,6 +158,9 @@ export default function Home() {
               Score: {score} | Set #: {setCount}
             </div>
             <div className={styles.history}>
+            {rounds.map((round, index) => (
+              <p key={"history-" + index.toString()}>{round.message}</p>
+            ))}
             </div>
             <div className={styles.controls}>
               <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
