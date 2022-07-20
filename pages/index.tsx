@@ -9,10 +9,30 @@ interface CardType {
   value: number;
 }
 
+export function getRandomCards(): CardType[] {
+  const suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
+  let fourCards = [] as CardType[];
+
+  for(var i = 0; i < 4; i++) {
+    fourCards.push({
+      suit: suits[Math.floor(Math.random() * 4)],
+      value: Math.ceil(Math.random() * 13)
+    });
+  }
+
+  return fourCards;
+}
+
 export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
-  const [cards, setCards] = useState<CardType[]>([]);
+  const [cards, setCards] = useState<CardType[]>(getRandomCards());
+
+  useEffect(() => {
+    console.log("generating new cards");
+    getRandomCards();
+    console.log(cards);
+  }, [setCount]);
 
   return (
     <div className={styles.container}>
@@ -37,8 +57,7 @@ export default function Home() {
           </div>
           <div className={styles.actions}>
             <div className={styles.score}>
-              <div className={styles.counter}>Score: {score}</div>
-              <div className={styles.counter}>Set #: {setCount}</div>
+              Score: {score} | Set #: {setCount}
             </div>
             <div className={styles.controls}>
               <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
