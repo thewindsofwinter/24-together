@@ -131,11 +131,12 @@ export default function Home() {
                   thisRound.message = "Invalid: " + code[1];
                   thisRound.color = 2;
                 }
-                setRounds([...rounds, thisRound as RoundInfo]);
 
-                if(rounds.length > 6) {
-                  setRounds(rounds.slice(-6))
+                let newRounds = [...rounds, thisRound as RoundInfo];
+                if(newRounds.length >= 3) {
+                  newRounds = newRounds.slice(-3);
                 }
+                setRounds(newRounds);
 
                 setSetCount(setCount + 1);
                 input.value = "";
