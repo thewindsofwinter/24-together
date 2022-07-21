@@ -83,12 +83,18 @@ aspect ratio of 2:1 (side areas)
   padding: 1rem;
   color: black;
   flex-basis: 2rem;
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex-grow: 0;
+  flex-shrink: 0;
   text-align: center;
 
   font-size: 1.5rem;
   font-weight: 800;
+}
+
+.history {
+  flex-basis: 2rem;
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 
 .controls {
@@ -103,7 +109,7 @@ aspect ratio of 2:1 (side areas)
   color: white;
 }
 
-.newGame, .nextSet {
+.newGame, .nextSet, .toggleSubmit {
   user-select: none;
   background-color: var(--primary);
   padding: 1rem;
@@ -111,11 +117,69 @@ aspect ratio of 2:1 (side areas)
   transition: background-color 0.5s;
 }
 
-.newGame:hover, .nextSet:hover {
+.newGame:hover, .nextSet:hover, .toggleSubmit:hover {
   background-color: black;
   transition: background-color 0.5s;
 }
 
 .nextSet {
   border-radius: 0 0 1rem 0;
+}
+
+.inputBar {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 0.75rem;
+
+  width: 90%;
+  border-radius: 1rem;
+  display: flex;
+}
+
+.input, .toggleSubmit {
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
+.input {
+  font-family: monospace;
+  border: 4px var(--primary) solid;
+  border-radius: 1rem 0 0 1rem;
+  flex-basis: 80%;
+}
+
+.toggleSubmit {
+  border: none;
+  border-radius: 0 1rem 1rem 0;
+  flex-basis: 20%;
+  color: white;
+}
+
+.displayCards {
+  flex-basis: 80%;
+  flex-grow: 1;
+}
+
+.instructions {
+  font-size: 0.75rem;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.play {
+  display: flex;
+  flex-direction: column;
+}
+
+.hideButton {
+  text-decoration: underline;
+  user-select: none;
+  transition: color 0.5s, font-weight 0.5s;
+}
+
+.hideButton:hover {
+  font-weight: 800;
+  color: black;
+  transition: color 0.5s, font-weight 0.5s;
 }
