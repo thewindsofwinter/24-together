@@ -14,7 +14,7 @@ export default function HistoryInfo(props: RoundInfo) {
       return (
         <div className={styles.historyBox}>
           <div className="flex flex-wrap w-full">{props.data.values.map((card, index) => (
-            <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
+            <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
           <p>Query: "{props.data.query}"</p>
           <p>{props.data.message}</p>
@@ -25,7 +25,7 @@ export default function HistoryInfo(props: RoundInfo) {
       return (
         <div className={styles.historyBox}>
           <div className="flex flex-wrap w-full">{props.data.values.map((card, index) => (
-            <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
+            <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
           <p className="text-red-700">Query: "{props.data.query}"</p>
           <p className="text-red-700">{props.data.message}</p>
