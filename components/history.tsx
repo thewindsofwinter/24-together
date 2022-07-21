@@ -16,7 +16,7 @@ export default function HistoryInfo(props: RoundInfo) {
           <div className="flex flex-wrap w-full">{props.data.values.map((card, index) => (
             <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
-          <p>Query: "{props.data.query}"</p>
+          <p>Query: &quot;{props.data.query}&quot;</p>
           <p>{props.data.message}</p>
         </div>
       );
@@ -27,7 +27,7 @@ export default function HistoryInfo(props: RoundInfo) {
           <div className="flex flex-wrap w-full">{props.data.values.map((card, index) => (
             <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
-          <p className="text-red-700">Query: "{props.data.query}"</p>
+          <p className="text-red-700">Query: &quot;{props.data.query}&quot;</p>
           <p className="text-red-700">{props.data.message}</p>
         </div>
       );
