@@ -139,7 +139,7 @@ export default function Home() {
                 setRounds([...rounds, thisRound as RoundInfo]);
 
                 if(rounds.length >= 3) {
-                  setRounds(rounds.slice(-3))
+                  setRounds(rounds.slice(0, 3))
                 }
 
                 setSetCount(setCount + 1);
