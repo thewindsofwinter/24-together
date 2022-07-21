@@ -1,7 +1,7 @@
 import Card from '../components/card'
 import styles from '../styles/HistoryInfo.module.css'
 
-interface RoundInfo {
+export interface RoundInfo {
   values: CardType[];
   color: number;
   message: string;
@@ -9,13 +9,29 @@ interface RoundInfo {
 }
 
 export default function HistoryInfo(props: RoundInfo) {
-  return (
-    <div className="historyBox">
-      <div className="flex flex-wrap -mb-4 -mx-2 w-full">{props.data.values.map((card, index) => (
-        <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
-      ))}</div>
-      <p>{props.data.query}</p>
-      <p>{props.data.message}</p>
-    </div>
-  );
+  switch(props.data.color) {
+    case 0:
+      return (
+        <div className={styles.historyBox}>
+          <div className="flex flex-wrap w-full">{props.data.values.map((card, index) => (
+            <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
+          ))}</div>
+          <p>Query: "{props.data.query}"</p>
+          <p>{props.data.message}</p>
+        </div>
+      );
+      break;
+    default:
+      return (
+        <div className={styles.historyBox}>
+          <div className="flex flex-wrap w-full">{props.data.values.map((card, index) => (
+            <Card suit={card.suit} val={card.value} key={"card" + index.toString()}></Card>
+          ))}</div>
+          <p className="text-red-700">Query: "{props.data.query}"</p>
+          <p className="text-red-700">{props.data.message}</p>
+        </div>
+      );
+      break;
+  }
+
 }

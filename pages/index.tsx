@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card from '../components/card'
-import HistoryInfo, RoundInfo from { '../components/history' }
+import HistoryInfo, { RoundInfo } from '../components/history'
 
 interface CardType {
   suit: string;
