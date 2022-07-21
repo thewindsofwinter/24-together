@@ -1,4 +1,4 @@
-import Card from '../components/card'
+import Card, { CardType } from '../components/card'
 import styles from '../styles/HistoryInfo.module.css'
 
 export interface RoundInfo {

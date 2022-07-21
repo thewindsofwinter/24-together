@@ -2,13 +2,8 @@ import Head from 'next/head'
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
-import Card from '../components/card'
+import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-
-interface CardType {
-  suit: string;
-  value: number;
-}
 
 export function getRandomCards(): CardType[] {
   const suits = ["spades", "hearts", "diamonds", "clubs"];

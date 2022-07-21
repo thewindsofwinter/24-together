@@ -12,7 +12,10 @@ type Props = {
 }
 
 
-
+export interface CardType {
+  suit: string;
+  value: number;
+}
 
 const card = ({ val, suit, small }: Props) => {
     if (small) {
