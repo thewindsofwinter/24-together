@@ -158,7 +158,11 @@ export default function Home() {
             </div>
             <div className={styles.history}>
             {rounds.map((round, index) => (
-              <HistoryInfo key={"history-" + index.toString()} data={round}/>
+              <HistoryInfo key={"history-" + index.toString()}
+                values={round.values}
+                color={round.color}
+                message={round.message}
+                query={round.query}/>
             ))}
             </div>
             <div className={styles.controls}>
