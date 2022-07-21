@@ -134,7 +134,7 @@ export default function Home() {
 
                 let newRounds = [...rounds, thisRound as RoundInfo];
                 if(newRounds.length >= 3) {
-                  newRounds = newRounds.slice(0, 3);
+                  newRounds = newRounds.slice(-3);
                 }
                 setRounds(newRounds);
 
