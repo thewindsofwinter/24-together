@@ -136,6 +136,12 @@ aspect ratio of 2:1 (side areas)
   display: flex;
 }
 
+.input:focus-visible {
+  border: 4px black solid;
+  outline: none;
+  transition: border 0.5s;
+}
+
 .input, .toggleSubmit {
   padding: 1rem;
   font-size: 1.5rem;
@@ -146,6 +152,7 @@ aspect ratio of 2:1 (side areas)
   border: 4px var(--primary) solid;
   border-radius: 1rem 0 0 1rem;
   flex-basis: 80%;
+  transition: border 0.5s;
 }
 
 .toggleSubmit {
