@@ -16,8 +16,19 @@ export default function HistoryInfo(props: RoundInfo) {
           <div className="flex flex-wrap w-full">{props.values.map((card, index) => (
             <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
-          <p>Query: &quot;{props.query}&quot;</p>
+          <p>{props.query}</p>
           <p>{props.message}</p>
+        </div>
+      );
+      break;
+    case 1:
+      return (
+        <div className={styles.historyBox}>
+          <div className="flex flex-wrap w-full">{props.values.map((card, index) => (
+            <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
+          ))}</div>
+          <p className="text-red-700">{props.query}</p>
+          <p className="text-red-700">{props.message}</p>
         </div>
       );
       break;
@@ -27,8 +38,8 @@ export default function HistoryInfo(props: RoundInfo) {
           <div className="flex flex-wrap w-full">{props.values.map((card, index) => (
             <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
-          <p className="text-red-700">Query: {props.query}</p>
-          <p className="text-red-700">{props.message}</p>
+          <p className="text-yellow-700">{props.query}</p>
+          <p className="text-yellow-700">{props.message}</p>
         </div>
       );
       break;

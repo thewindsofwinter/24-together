@@ -47,7 +47,7 @@ export default function Home() {
       // Co-opt history screen to show new game
       let thisRound = {
         values: [],
-        color: 1,
+        color: 2,
         message: "New game started by " + msg.sender,
         query: ""
       }
@@ -65,7 +65,7 @@ export default function Home() {
         values: cards.current,
         color: 0,
         message: msg.evaluation,
-        query: "\"" + msg.guess + "\" by " + msg.sender
+        query: "Query: \"" + msg.guess + "\" by " + msg.sender
       }
       console.log(thisRound)
 
