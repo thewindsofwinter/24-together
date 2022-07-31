@@ -80,36 +80,7 @@ export default function Home() {
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
-
-                let code = verifyOperations(input.value, cards).split('-');
-                let thisRound = {
-                  values: cards,
-                  color: 0,
-                  message: "",
-                  query: input.value
-                }
-                console.log(thisRound)
-
-                if(code[0] == "correct") {
-                  thisRound.message = "Correct!";
-                  setScore(score + 1);
-                }
-                else if(code[0] == "incorrect") {
-                  thisRound.message = "Incorrect!";
-                  thisRound.color = 1;
-                }
-                else {
-                  thisRound.message = "Invalid: " + code[1];
-                  thisRound.color = 2;
-                }
-
-                let newRounds = [...rounds, thisRound as RoundInfo];
-                if(newRounds.length >= 3) {
-                  newRounds = newRounds.slice(-3);
-                }
-                setRounds(newRounds);
-
-                setSetCount(setCount + 1);
+                socket.emit("createdMessage", { author: chosenUsername, message });
                 input.value = "";
               }}>I found 24!</button>
             </div>
