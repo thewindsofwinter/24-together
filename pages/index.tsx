@@ -9,8 +9,9 @@ export default function Home() {
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
   const [rounds, setRounds] = useState<RoundInfo[]>([]);
+
   // Might make this a toggle button
-  const [submitText, setSubmitText] = useState<string>("I found 24!");
+  // const [submitText, setSubmitText] = useState<string>("I found 24!");
 
   // head off hydration problem
   useEffect(() => setCards(getRandomCards()), [])
@@ -19,6 +20,25 @@ export default function Home() {
     setCards(getRandomCards());
     console.log(cards);
   }, [setCount]);
+
+  useEffect(() => {
+  socketInitializer();
+}, []);
+
+const socketInitializer = async () => {
+  // We just call it because we don't need anything else out of it
+  await fetch("/api/socket");
+
+  socket = io();
+
+  socket.on("newIncomingMessage", (msg) => {
+    setMessages((currentMsg) => [
+      ...currentMsg,
+      { author: msg.author, message: msg.message },
+    ]);
+    console.log(messages);
+  });
+};
 
   return (
     <div className={styles.container}>
@@ -73,7 +93,7 @@ export default function Home() {
 
                 setSetCount(setCount + 1);
                 input.value = "";
-              }}>{submitText}</button>
+              }}>I found 24!</button>
             </div>
 
             <div className={styles.instructions} id="instructions">
