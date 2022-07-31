@@ -33,19 +33,30 @@ export default function Home() {
     socket = io();
 
     socket.on("guessEvaluation", (msg) => {
+      let thisRound = {
+        values: cards,
+        color: 0,
+        message: msg.evaluation,
+        query: msg.guess + " by " + msg.sender
+      }
+      console.log(thisRound)
+
       if(msg.evaluation === "Correct!") {
+        if(msg.sender === username) {
+          setScore(score + 1);
+        }
+
         setCards(msg.cards);
-        socket.broadcast.emit("guessEvaluation",
-          { sender: msg.author, guess: msg.input, evaluation: "Correct!", cards: cards });
       }
       else if(msg.evaluation === "Incorrect!") {
-        socket.broadcast.emit("guessEvaluation",
-          { sender: msg.author, guess: msg.input, evaluation: "Incorrect!", cards: cards });
+        thisRound.color = 1;
       }
       else {
-        socket.broadcast.emit("guessEvaluation",
-          { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1], cards: cards });
+        thisRound.color = 2;
       }
+
+      let newRounds = [...rounds, thisRound as RoundInfo];
+      setRounds(newRounds);
     })
 
     socket.on("currentCards", (msg) => {
