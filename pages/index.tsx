@@ -9,7 +9,7 @@ import io from "socket.io-client";
 let socket;
 
 export default function Home() {
-  const [username, setUsername] = useState<string>("orzosity");
+  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const cards = useRef<CardType[]>([]);
@@ -20,84 +20,82 @@ export default function Home() {
   // const [submitText, setSubmitText] = useState<string>("I found 24!");
 
   useEffect(() => {
-    setUsername("birb-" + String(new Date().getTime()).substr(-3));
-    socketInitializer();
-  }, []);
+    const socketInitializer = async () => {
+      // We just call it because we don't need anything else out of it
+      await fetch("/api/socket");
 
-  const socketInitializer = async () => {
-    // We just call it because we don't need anything else out of it
-    await fetch("/api/socket");
+      socket = io();
 
-    socket = io();
-
-    socket.on("nextRound", (msg) => {
-      // Co-opt history screen to show next round
-      let thisRound = {
-        values: [],
-        color: 2,
-        message: "Round skipped by " + msg.sender,
-        query: ""
-      }
-
-      cards.current = msg.cards;
-      setSetCount((setCount) => { return setCount + 1; });
-      setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
-    });
-
-    socket.on("nextGame", (msg) => {
-      // Co-opt history screen to show new game
-      let thisRound = {
-        values: [],
-        color: 2,
-        message: "New game started by " + msg.sender,
-        query: ""
-      }
-
-      cards.current = msg.cards;
-      setSetCount(0);
-      setScore(0);
-      setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
-    });
-
-    socket.on("guessEvaluation", (msg) => {
-      console.log("entered evaluation")
-      // This is such bad coding practice
-      let thisRound = {
-        values: cards.current,
-        color: 0,
-        message: msg.evaluation,
-        query: "Query: \"" + msg.guess + "\" by " + msg.sender
-      }
-      console.log(thisRound)
-
-      if(msg.evaluation === "Correct!") {
-        if(msg.sender === username) {
-          setScore((score) => { return score + 1; });
+      socket.on("nextRound", (msg) => {
+        // Co-opt history screen to show next round
+        let thisRound = {
+          values: [],
+          color: 2,
+          message: "Round skipped by " + msg.sender,
+          query: ""
         }
 
+        cards.current = msg.cards;
         setSetCount((setCount) => { return setCount + 1; });
-      }
-      else if(msg.evaluation === "Incorrect!") {
-        thisRound.color = 1;
-      }
-      else {
-        thisRound.color = 2;
-      }
+        setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
+      });
 
-      setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
+      socket.on("nextGame", (msg) => {
+        // Co-opt history screen to show new game
+        let thisRound = {
+          values: [],
+          color: 2,
+          message: "New game started by " + msg.sender,
+          query: ""
+        }
 
-      cards.current = msg.cards;
-    })
+        cards.current = msg.cards;
+        setSetCount(0);
+        setScore(0);
+        setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
+      });
 
-    socket.on("currentCards", (msg) => {
-      cards.current = msg.cards;
-      // Force rerender
-      setCardKey((cardKey) => { return cardKey + 1; })
-    });
+      socket.on("guessEvaluation", (msg) => {
+        console.log("entered evaluation")
+        // This is such bad coding practice
+        let thisRound = {
+          values: cards.current,
+          color: 0,
+          message: msg.evaluation,
+          query: "Query: \"" + msg.guess + "\" by " + msg.sender
+        }
+        console.log(thisRound)
 
-    // Get cards
-    socket.emit("getCards", {})
-  };
+        if(msg.evaluation === "Correct!") {
+          if(msg.sender === username) {
+            setScore((score) => { return score + 1; });
+          }
+
+          setSetCount((setCount) => { return setCount + 1; });
+        }
+        else if(msg.evaluation === "Incorrect!") {
+          thisRound.color = 1;
+        }
+        else {
+          thisRound.color = 2;
+        }
+
+        setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
+
+        cards.current = msg.cards;
+      })
+
+      socket.on("currentCards", (msg) => {
+        cards.current = msg.cards;
+        // Force rerender
+        setCardKey((cardKey) => { return cardKey + 1; })
+      });
+
+      // Get cards
+      socket.emit("getCards", {})
+    };
+    socketInitializer();
+  }, [username]);
 
   const sendMessage = async (input) => {
     socket.emit("sendGuess", { author: username, input: input });
