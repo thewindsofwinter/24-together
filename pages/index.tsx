@@ -14,14 +14,6 @@ export default function Home() {
   // Might make this a toggle button
   // const [submitText, setSubmitText] = useState<string>("I found 24!");
 
-  // head off hydration problem
-  useEffect(() => setCards(getRandomCards()), [])
-  useEffect(() => {
-    console.log("generating new cards");
-    setCards(getRandomCards());
-    console.log(cards);
-  }, [setCount]);
-
   useEffect(() => {
     socketInitializer();
   }, []);
@@ -46,6 +38,7 @@ export default function Home() {
           setScore(score + 1);
         }
 
+        setSetCount(setCount + 1);
         setCards(msg.cards);
       }
       else if(msg.evaluation === "Incorrect!") {
