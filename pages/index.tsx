@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
-import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 
