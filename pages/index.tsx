@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import styles from '../styles/Home.module.css'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
@@ -12,7 +12,8 @@ export default function Home() {
   const [username, setUsername] = useState<string>("orzosity");
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
-  const [cards, setCards] = useState<CardType[]>([]);
+  const cards = useRef<CardType[]>([]);
+  const [cardKey, setCardKey] = useState<number>(0);
   const [rounds, setRounds] = useState<RoundInfo[]>([]);
 
   // Might make this a toggle button
@@ -29,40 +30,39 @@ export default function Home() {
     socket = io();
 
     socket.on("guessEvaluation", (msg) => {
+      console.log("entered evaluation")
       // This is such bad coding practice
-      setCards((cards) => {
-        setRounds((rounds) => {
-          let thisRound = {
-            values: cards,
-            color: 0,
-            message: msg.evaluation,
-            query: "\"" + msg.guess + "\" by " + msg.sender
-          }
-          console.log(thisRound)
+      let thisRound = {
+        values: cards.current,
+        color: 0,
+        message: msg.evaluation,
+        query: "\"" + msg.guess + "\" by " + msg.sender
+      }
+      console.log(thisRound)
 
-          if(msg.evaluation === "Correct!") {
-            if(msg.sender === username) {
-              setScore((score) => {score + 1});
-            }
+      if(msg.evaluation === "Correct!") {
+        if(msg.sender === username) {
+          setScore((score) => { return score + 1; });
+        }
 
-            setSetCount((setCount) => { return setCount + 1; });
-          }
-          else if(msg.evaluation === "Incorrect!") {
-            thisRound.color = 1;
-          }
-          else {
-            thisRound.color = 2;
-          }
+        setSetCount((setCount) => { return setCount + 1; });
+      }
+      else if(msg.evaluation === "Incorrect!") {
+        thisRound.color = 1;
+      }
+      else {
+        thisRound.color = 2;
+      }
 
-          return [...rounds, thisRound as RoundInfo];
-        });
+      setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
 
-        return msg.cards;
-      });
+      cards.current = msg.cards;
     })
 
     socket.on("currentCards", (msg) => {
-      setCards(msg.cards);
+      cards.current = msg.cards;
+      // Force rerender
+      setCardKey((cardKey) => { return cardKey + 1; })
     });
 
     // Get cards
@@ -85,8 +85,8 @@ export default function Home() {
         <div className={styles.wrapper}>
           <div className={styles.play}>
             <div className={styles.displayCards}>
-              <div className="flex flex-wrap -mb-4 -mx-2 w-full">
-              {cards.map((card, index) => (
+              <div className="flex flex-wrap -mb-4 -mx-2 w-full" key={cardKey}>
+              {cards.current.map((card, index) => (
                 <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
               ))}
               </div>
@@ -125,7 +125,7 @@ export default function Home() {
             </div>
             // TODO: MAKE CONTROLS WORK
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
+              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
                 New Game
               </div>
               <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>

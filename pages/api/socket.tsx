@@ -25,15 +25,18 @@ export default function SocketHandler(req, res) {
       let evaluatedGuess = verifyOperations(msg.input, cards).split('-');
 
       if(evaluatedGuess[0] === "correct") {
+        console.log("sent evaluation")
         cards = getRandomCards();
         socket.broadcast.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Correct!", cards: cards });
       }
       else if(evaluatedGuess[0] === "incorrect") {
+        console.log("sent evaluation")
         socket.broadcast.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Incorrect!", cards: cards });
       }
       else {
+        console.log("sent evaluation")
         socket.broadcast.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1], cards: cards });
       }
