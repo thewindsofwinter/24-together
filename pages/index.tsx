@@ -29,6 +29,35 @@ export default function Home() {
 
     socket = io();
 
+    socket.on("nextRound", (msg) => {
+      // Co-opt history screen to show next round
+      let thisRound = {
+        values: [],
+        color: 1,
+        message: "Round skipped by " + msg.sender,
+        query: ""
+      }
+
+      cards.current = msg.cards;
+      setSetCount((setCount) => { return setCount + 1; });
+      setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
+    });
+
+    socket.on("nextGame", (msg) => {
+      // Co-opt history screen to show new game
+      let thisRound = {
+        values: [],
+        color: 1,
+        message: "New game started by " + msg.sender,
+        query: ""
+      }
+
+      cards.current = msg.cards;
+      setSetCount(0);
+      setScore(0);
+      setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
+    });
+
     socket.on("guessEvaluation", (msg) => {
       console.log("entered evaluation")
       // This is such bad coding practice
@@ -132,10 +161,10 @@ export default function Home() {
             ))}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
+              <div className={styles.newGame} onClick={() => { newGame(); }}>
                 New Game
               </div>
-              <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>
+              <div className={styles.nextSet} onClick={() => { skipRound(); }}>
                 Next Set
               </div>
             </div>
