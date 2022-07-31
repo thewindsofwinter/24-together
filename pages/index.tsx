@@ -73,6 +73,14 @@ export default function Home() {
     socket.emit("sendGuess", { author: username, input: input });
   };
 
+  const skipRound = async () => {
+    socket.emit("skipRound", { author: username });
+  };
+
+  const newGame = async () => {
+    socket.emit("newGame", { author: username });
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -123,7 +131,6 @@ export default function Home() {
                 query={round.query}/>
             ))}
             </div>
-            // TODO: MAKE CONTROLS WORK
             <div className={styles.controls}>
               <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
                 New Game

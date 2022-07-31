@@ -21,22 +21,29 @@ export default function SocketHandler(req, res) {
       socket.broadcast.emit("currentCards", { cards: cards });
     };
 
+    const skipRound = (msg) => {
+      cards = getRandomCards();
+      socket.broadcast.emit("nextRound", { sender: msg.author, cards: cards });
+    }
+
+    const newGame = (msg) => {
+      cards = getRandomCards();
+      socket.broadcast.emit("nextGame", { sender: msg.author, cards: cards });
+    }
+
     const evaluateGuess = (msg) => {
       let evaluatedGuess = verifyOperations(msg.input, cards).split('-');
 
       if(evaluatedGuess[0] === "correct") {
-        console.log("sent evaluation")
         cards = getRandomCards();
         socket.broadcast.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Correct!", cards: cards });
       }
       else if(evaluatedGuess[0] === "incorrect") {
-        console.log("sent evaluation")
         socket.broadcast.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Incorrect!", cards: cards });
       }
       else {
-        console.log("sent evaluation")
         socket.broadcast.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1], cards: cards });
       }
@@ -44,6 +51,8 @@ export default function SocketHandler(req, res) {
 
     socket.on("getCards", getCards);
     socket.on("sendGuess", evaluateGuess);
+    socket.on("skipRound", skipRound);
+    socket.on("newGame", newGame);
   };
 
   // Define actions inside
