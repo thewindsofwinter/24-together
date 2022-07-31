@@ -4,7 +4,7 @@ import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 
 export default function SocketHandler(req, res) {
-  const [cards, setCards] = useState<CardType[]>([]);
+  let cards = getRandomCards();
 
   // It means that socket server was already initialised
   if (res.socket.server.io) {
@@ -17,9 +17,6 @@ export default function SocketHandler(req, res) {
   res.socket.server.io = io;
 
   const onConnection = (socket) => {
-    // head off hydration problem
-    useEffect(() => setCards(getRandomCards()), [])
-
     const getCards = (msg) => {
       socket.broadcast.emit("currentCards", { cards: cards });
     };
@@ -28,7 +25,7 @@ export default function SocketHandler(req, res) {
       let evaluatedGuess = verifyOperations(msg.input, cards).split('-');
 
       if(evaluatedGuess[0] === "correct") {
-        setCards(getRandomCards());
+        cards = getRandomCards();
         socket.broadcast.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Correct!", cards: cards });
       }
