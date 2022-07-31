@@ -87,7 +87,7 @@ export default function Home() {
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
-                socket.emit("createdMessage", { author: chosenUsername, message });
+                sendMessage(input);
                 input.value = "";
               }}>I found 24!</button>
             </div>
@@ -115,6 +115,7 @@ export default function Home() {
                 query={round.query}/>
             ))}
             </div>
+            // TODO: MAKE CONTROLS WORK
             <div className={styles.controls}>
               <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
                 New Game
