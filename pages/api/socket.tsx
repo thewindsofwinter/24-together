@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import React, { useEffect, useState, useCallback } from 'react';
 import mexp from 'math-expression-evaluator'
-import Card, { CardType } from '../components/card'
+import Card, { CardType } from '../../components/card'
 
 export default function SocketHandler(req, res) {
   let cards = getRandomCards();
