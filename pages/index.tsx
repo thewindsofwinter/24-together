@@ -20,6 +20,7 @@ export default function Home() {
   // const [submitText, setSubmitText] = useState<string>("I found 24!");
 
   useEffect(() => {
+    setUsername("birb-" + String(new Date().getTime()).substr(-3));
     socketInitializer();
   }, []);
 
