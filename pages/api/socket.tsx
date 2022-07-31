@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import messageHandler from "../../utils/sockets/messageHandler";
+import gameHandler from "../../utils/sockets/gameHandler";
 
 export default function SocketHandler(req, res) {
   // It means that socket server was already initialised

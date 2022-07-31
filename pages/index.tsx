@@ -3,6 +3,10 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
+import io from "socket.io-client";
+
+// socket.io
+let socket;
 
 export default function Home() {
   const [username, setUsername] = useState<string>("orzosity");
