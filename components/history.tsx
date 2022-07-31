@@ -38,8 +38,8 @@ export default function HistoryInfo(props: RoundInfo) {
           <div className="flex flex-wrap w-full">{props.values.map((card, index) => (
             <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
-          <p className="text-yellow-700">{props.query}</p>
-          <p className="text-yellow-700">{props.message}</p>
+          <p className="text-yellow-500">{props.query}</p>
+          <p className="text-yellow-500">{props.message}</p>
         </div>
       );
       break;

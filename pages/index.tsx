@@ -33,7 +33,7 @@ export default function Home() {
       // Co-opt history screen to show next round
       let thisRound = {
         values: [],
-        color: 1,
+        color: 2,
         message: "Round skipped by " + msg.sender,
         query: ""
       }
