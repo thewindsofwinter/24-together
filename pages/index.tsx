@@ -29,31 +29,35 @@ export default function Home() {
     socket = io();
 
     socket.on("guessEvaluation", (msg) => {
-      setRounds((cards, rounds) => {
-        let thisRound = {
-          values: cards,
-          color: 0,
-          message: msg.evaluation,
-          query: msg.guess + " by " + msg.sender
-        }
-        console.log(thisRound)
+      // This is such bad coding practice
+      setCards((cards) => {
+        setRounds((rounds) => {
+          let thisRound = {
+            values: cards,
+            color: 0,
+            message: msg.evaluation,
+            query: "\"" + msg.guess + "\" by " + msg.sender
+          }
+          console.log(thisRound)
 
-        if(msg.evaluation === "Correct!") {
-          if(msg.sender === username) {
-            setScore((score) => {score + 1});
+          if(msg.evaluation === "Correct!") {
+            if(msg.sender === username) {
+              setScore((score) => {score + 1});
+            }
+
+            setSetCount((setCount) => { return setCount + 1; });
+          }
+          else if(msg.evaluation === "Incorrect!") {
+            thisRound.color = 1;
+          }
+          else {
+            thisRound.color = 2;
           }
 
-          setSetCount((setCount) => { return setCount + 1; });
-          setCards(msg.cards);
-        }
-        else if(msg.evaluation === "Incorrect!") {
-          thisRound.color = 1;
-        }
-        else {
-          thisRound.color = 2;
-        }
+          return [...rounds, thisRound as RoundInfo];
+        });
 
-        return [...rounds, thisRound as RoundInfo];
+        return msg.cards;
       });
     })
 
