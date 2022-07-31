@@ -5,20 +5,6 @@ import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 
-export function getRandomCards(): CardType[] {
-  const suits = ["spades", "hearts", "diamonds", "clubs"];
-  let fourCards = [] as CardType[];
-
-  for(var i = 0; i < 4; i++) {
-    fourCards.push({
-      suit: suits[Math.floor(Math.random() * 4)],
-      value: Math.ceil(Math.random() * 13)
-    });
-  }
-
-  return fourCards;
-}
-
 export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("received " + input)
   for(var i = 0; i < input.length; i++) {
