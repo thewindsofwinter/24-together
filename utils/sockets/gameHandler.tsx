@@ -19,11 +19,26 @@ export default (io, socket) => {
   useEffect(() => setCards(getRandomCards()), [])
 
   const getCards = (msg) => {
-    socket.broadcast.emit("currentCards", cards);
+    socket.broadcast.emit("currentCards", { cards: cards });
   };
 
   const evaluateGuess = (msg) => {
-    let evaluatedGuess = verifyOperations(msg.input, cards);
+    let evaluatedGuess = verifyOperations(msg.input, cards).split('-');
+
+    if(evaluatedGuess[0] === "correct") {
+      setCards(getRandomCards());
+      socket.broadcast.emit("guessEvaluation",
+        { sender: msg.author, guess: msg.input, evaluation: "Correct!" });
+      socket.broadcast.emit("currentCards", { cards: cards });
+    }
+    else if(evaluatedGuess[0] === "incorrect") {
+      socket.broadcast.emit("guessEvaluation",
+        { sender: msg.author, guess: msg.input, evaluation: "Incorrect!" });
+    }
+    else {
+      socket.broadcast.emit("guessEvaluation",
+        { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1] });
+    }
   }
 
   socket.on("getCards", getCards);
