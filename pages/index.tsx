@@ -5,6 +5,7 @@ import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 
 export default function Home() {
+  const [username, setUsername] = useState<string>("orzosity");
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
@@ -30,6 +31,22 @@ export default function Home() {
     await fetch("/api/socket");
 
     socket = io();
+
+    socket.on("guessEvaluation", (msg) => {
+      if(msg.evaluation === "Correct!") {
+        setCards(msg.cards);
+        socket.broadcast.emit("guessEvaluation",
+          { sender: msg.author, guess: msg.input, evaluation: "Correct!", cards: cards });
+      }
+      else if(msg.evaluation === "Incorrect!") {
+        socket.broadcast.emit("guessEvaluation",
+          { sender: msg.author, guess: msg.input, evaluation: "Incorrect!", cards: cards });
+      }
+      else {
+        socket.broadcast.emit("guessEvaluation",
+          { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1], cards: cards });
+      }
+    })
 
     socket.on("currentCards", (msg) => {
       setCards((currentMsg) => msg.cards);
