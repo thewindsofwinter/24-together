@@ -22,23 +22,20 @@ export default function Home() {
   }, [setCount]);
 
   useEffect(() => {
-  socketInitializer();
-}, []);
+    socketInitializer();
+  }, []);
 
-const socketInitializer = async () => {
-  // We just call it because we don't need anything else out of it
-  await fetch("/api/socket");
+  const socketInitializer = async () => {
+    // We just call it because we don't need anything else out of it
+    await fetch("/api/socket");
 
-  socket = io();
+    socket = io();
 
-  socket.on("newIncomingMessage", (msg) => {
-    setMessages((currentMsg) => [
-      ...currentMsg,
-      { author: msg.author, message: msg.message },
-    ]);
-    console.log(messages);
-  });
-};
+    socket.on("currentCards", (msg) => {
+      setCards((currentMsg) => msg.cards);
+      console.log(cards);
+    });
+  };
 
   return (
     <div className={styles.container}>

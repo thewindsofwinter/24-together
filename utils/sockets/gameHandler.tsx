@@ -32,16 +32,15 @@ export default (io, socket) => {
     if(evaluatedGuess[0] === "correct") {
       setCards(getRandomCards());
       socket.broadcast.emit("guessEvaluation",
-        { sender: msg.author, guess: msg.input, evaluation: "Correct!" });
-      socket.broadcast.emit("currentCards", { cards: cards });
+        { sender: msg.author, guess: msg.input, evaluation: "Correct!", cards: cards });
     }
     else if(evaluatedGuess[0] === "incorrect") {
       socket.broadcast.emit("guessEvaluation",
-        { sender: msg.author, guess: msg.input, evaluation: "Incorrect!" });
+        { sender: msg.author, guess: msg.input, evaluation: "Incorrect!", cards: cards });
     }
     else {
       socket.broadcast.emit("guessEvaluation",
-        { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1] });
+        { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1], cards: cards });
     }
   }
 
