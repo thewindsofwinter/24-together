@@ -56,6 +56,13 @@ export default function Home() {
       setCards((currentMsg) => msg.cards);
       console.log(cards);
     });
+
+    // Get cards
+    socket.emit("getCards", {})
+  };
+
+  const sendMessage = async (input) => {
+    socket.emit("sendGuess", { author: username, input: input });
   };
 
   return (
