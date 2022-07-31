@@ -91,7 +91,7 @@ export default function Home() {
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
-                sendMessage(input);
+                sendMessage(input.value);
                 input.value = "";
               }}>I found 24!</button>
             </div>
