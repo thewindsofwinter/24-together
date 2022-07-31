@@ -18,17 +18,17 @@ export default function SocketHandler(req, res) {
 
   const onConnection = (socket) => {
     const getCards = (msg) => {
-      socket.broadcast.emit("currentCards", { cards: cards });
+      io.emit("currentCards", { cards: cards });
     };
 
     const skipRound = (msg) => {
       cards = getRandomCards();
-      socket.broadcast.emit("nextRound", { sender: msg.author, cards: cards });
+      io.emit("nextRound", { sender: msg.author, cards: cards });
     }
 
     const newGame = (msg) => {
       cards = getRandomCards();
-      socket.broadcast.emit("nextGame", { sender: msg.author, cards: cards });
+      io.emit("nextGame", { sender: msg.author, cards: cards });
     }
 
     const evaluateGuess = (msg) => {
@@ -36,15 +36,15 @@ export default function SocketHandler(req, res) {
 
       if(evaluatedGuess[0] === "correct") {
         cards = getRandomCards();
-        socket.broadcast.emit("guessEvaluation",
+        io.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Correct!", cards: cards });
       }
       else if(evaluatedGuess[0] === "incorrect") {
-        socket.broadcast.emit("guessEvaluation",
+        io.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Incorrect!", cards: cards });
       }
       else {
-        socket.broadcast.emit("guessEvaluation",
+        io.emit("guessEvaluation",
           { sender: msg.author, guess: msg.input, evaluation: "Invalid: " + evaluatedGuess[1], cards: cards });
       }
     }

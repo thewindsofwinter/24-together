@@ -14,7 +14,7 @@ export default function Home() {
   const [setCount, setSetCount] = useState<number>(0);
   const cards = useRef<CardType[]>([]);
   const [cardKey, setCardKey] = useState<number>(0);
-  const [rounds, setRounds] = useState<RoundInfo[]>([]);
+  const rounds = useRef<RoundInfo[]>([]);
 
   // Might make this a toggle button
   // const [submitText, setSubmitText] = useState<string>("I found 24!");
