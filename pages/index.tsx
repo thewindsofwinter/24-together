@@ -1,113 +1,91 @@
 import Head from 'next/head'
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
+import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-import io from "socket.io-client";
 
-// socket.io
-let socket;
+export function getRandomCards(): CardType[] {
+  const suits = ["spades", "hearts", "diamonds", "clubs"];
+  let fourCards = [] as CardType[];
+
+  for(var i = 0; i < 4; i++) {
+    fourCards.push({
+      suit: suits[Math.floor(Math.random() * 4)],
+      value: Math.ceil(Math.random() * 13)
+    });
+  }
+
+  return fourCards;
+}
+
+export function verifyOperations(input: string, cards: CardType[]): string {
+  console.log("received " + input)
+  for(var i = 0; i < input.length; i++) {
+    let char = input.charAt(i);
+    if(char !== '+' && char !== '-' && char !== '*' && char !== '/' && char !== '('
+        && char !== ')' && char !== ' ' && !(char >= '0' && char <= '9')) {
+          return "invalid-Bad Character";
+    }
+  }
+
+  // Check if the string can be split for cards
+  let found = [false, false, false, false]
+  let tokens = input.split(/\D/)
+  for(var i = 0; i < tokens.length; i++) {
+    if(tokens[i] !== "") {
+      let val = parseInt(tokens[i]);
+      let ok = false;
+      for(var j = 0; j < 4; j++) {
+        if(!found[j] && cards[j].value === val) {
+          found[j] = true;
+          ok = true;
+          break;
+        }
+      }
+
+      if(!ok) {
+        return "invalid-Extra Number";
+      }
+    }
+  }
+
+  for(var i = 0; i < 4; i++) {
+    if(!found[i]) {
+      return "invalid-Missing Number";
+    }
+  }
+
+  try {
+    let val = mexp.eval(input);
+    console.log("valid and evaluated: " + val);
+    if(val === 24) {
+      return "correct"
+    }
+    else {
+      return "incorrect"
+    }
+  }
+  catch(e){
+    return "invalid-Bad Expression";
+  }
+}
 
 export default function Home() {
-  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
-  const cards = useRef<CardType[]>([]);
-  const [cardKey, setCardKey] = useState<number>(0);
+  const [cards, setCards] = useState<CardType[]>([]);
   const [rounds, setRounds] = useState<RoundInfo[]>([]);
-
   // Might make this a toggle button
-  // const [submitText, setSubmitText] = useState<string>("I found 24!");
+  const [submitText, setSubmitText] = useState<string>("I found 24!");
 
+  // head off hydration problem
+  useEffect(() => setCards(getRandomCards()), [])
   useEffect(() => {
-    const socketInitializer = async () => {
-      // We just call it because we don't need anything else out of it
-      await fetch("/api/socket");
-
-      socket = io();
-
-      socket.on("nextRound", (msg) => {
-        // Co-opt history screen to show next round
-        let thisRound = {
-          values: [],
-          color: 2,
-          message: "Round skipped by " + msg.sender,
-          query: ""
-        }
-
-        cards.current = msg.cards;
-        setSetCount((setCount) => { return setCount + 1; });
-        setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
-      });
-
-      socket.on("nextGame", (msg) => {
-        // Co-opt history screen to show new game
-        let thisRound = {
-          values: [],
-          color: 2,
-          message: "New game started by " + msg.sender,
-          query: ""
-        }
-
-        cards.current = msg.cards;
-        setSetCount(0);
-        setScore(0);
-        setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
-      });
-
-      socket.on("guessEvaluation", (msg) => {
-        console.log("entered evaluation")
-        // This is such bad coding practice
-        let thisRound = {
-          values: cards.current,
-          color: 0,
-          message: msg.evaluation,
-          query: "Query: \"" + msg.guess + "\" by " + msg.sender
-        }
-        console.log(thisRound)
-
-        if(msg.evaluation === "Correct!") {
-          if(msg.sender === username) {
-            setScore((score) => { return score + 1; });
-          }
-
-          setSetCount((setCount) => { return setCount + 1; });
-        }
-        else if(msg.evaluation === "Incorrect!") {
-          thisRound.color = 1;
-        }
-        else {
-          thisRound.color = 2;
-        }
-
-        setRounds((rounds) => { return [...rounds, thisRound as RoundInfo] });
-
-        cards.current = msg.cards;
-      })
-
-      socket.on("currentCards", (msg) => {
-        cards.current = msg.cards;
-        // Force rerender
-        setCardKey((cardKey) => { return cardKey + 1; })
-      });
-
-      // Get cards
-      socket.emit("getCards", {})
-    };
-    socketInitializer();
-  }, [username]);
-
-  const sendMessage = async (input) => {
-    socket.emit("sendGuess", { author: username, input: input });
-  };
-
-  const skipRound = async () => {
-    socket.emit("skipRound", { author: username });
-  };
-
-  const newGame = async () => {
-    socket.emit("newGame", { author: username });
-  };
+    console.log("generating new cards");
+    setCards(getRandomCards());
+    console.log(cards);
+  }, [setCount]);
 
   return (
     <div className={styles.container}>
@@ -121,8 +99,8 @@ export default function Home() {
         <div className={styles.wrapper}>
           <div className={styles.play}>
             <div className={styles.displayCards}>
-              <div className="flex flex-wrap -mb-4 -mx-2 w-full" key={cardKey}>
-              {cards.current.map((card, index) => (
+              <div className="flex flex-wrap -mb-4 -mx-2 w-full">
+              {cards.map((card, index) => (
                 <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
               ))}
               </div>
@@ -131,9 +109,38 @@ export default function Home() {
               <input className={styles.input} id="input"></input>
               <button className={styles.toggleSubmit} onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
-                sendMessage(input.value);
+
+                let code = verifyOperations(input.value, cards).split('-');
+                let thisRound = {
+                  values: cards,
+                  color: 0,
+                  message: "",
+                  query: input.value
+                }
+                console.log(thisRound)
+
+                if(code[0] == "correct") {
+                  thisRound.message = "Correct!";
+                  setScore(score + 1);
+                }
+                else if(code[0] == "incorrect") {
+                  thisRound.message = "Incorrect!";
+                  thisRound.color = 1;
+                }
+                else {
+                  thisRound.message = "Invalid: " + code[1];
+                  thisRound.color = 2;
+                }
+
+                let newRounds = [...rounds, thisRound as RoundInfo];
+                if(newRounds.length >= 3) {
+                  newRounds = newRounds.slice(-3);
+                }
+                setRounds(newRounds);
+
+                setSetCount(setCount + 1);
                 input.value = "";
-              }}>I found 24!</button>
+              }}>{submitText}</button>
             </div>
 
             <div className={styles.instructions} id="instructions">
@@ -160,10 +167,10 @@ export default function Home() {
             ))}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { newGame(); }}>
+              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
                 New Game
               </div>
-              <div className={styles.nextSet} onClick={() => { skipRound(); }}>
+              <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>
                 Next Set
               </div>
             </div>
