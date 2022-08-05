@@ -4,6 +4,23 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
+import { getDatabase } from "firebase/database";
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
+
+// TODO: Replace the following with your app's Firebase project configuration
+// See: https://firebase.google.com/docs/web/learn-more#config-object
+const firebaseConfig = {
+  // ...
+  // The value of `databaseURL` depends on the location of the database
+  databaseURL: "https://together-24game-default-rtdb.firebaseio.com",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Realtime Database and get a reference to the service
+const database = getDatabase(app);
 
 export function getRandomCards(): CardType[] {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
@@ -82,7 +99,8 @@ export default function Home() {
   // head off hydration problem
   useEffect(() => setCards(getRandomCards()), [])
   useEffect(() => {
-    console.log("generating new cards");
+    console.log("getting cards from firebase");
+
     setCards(getRandomCards());
     console.log(cards);
   }, [setCount]);
