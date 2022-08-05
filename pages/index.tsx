@@ -87,6 +87,19 @@ export function verifyOperations(input: string, cards: CardType[]): string {
   }
 }
 
+export function updateCardDB() {
+  let newCards = getRandomCards();
+  let wrappedCards = {
+    first: newCards[0],
+    second: newCards[1],
+    third: newCards[2],
+    fourth: newCards[3]
+  };
+
+  console.log(wrappedCards);
+  set(ref(database, 'cards/'), wrappedCards);
+}
+
 export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
@@ -145,18 +158,7 @@ export default function Home() {
 
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
-                  setScore(score + 1);
-  
-                  let newCards = getRandomCards();
-                  let wrappedCards = {
-                    first: newCards[0],
-                    second: newCards[1],
-                    third: newCards[2],
-                    fourth: newCards[3]
-                  };
-
-                  console.log(wrappedCards);
-                  set(ref(database, 'cards/'), wrappedCards);
+                  updateCardDB();
                 }
                 else if(code[0] == "incorrect") {
                   thisRound.message = "Incorrect!";
@@ -201,7 +203,7 @@ export default function Home() {
             ))}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
+              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
                 New Game
               </div>
               <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>
