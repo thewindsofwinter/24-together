@@ -146,6 +146,17 @@ export default function Home() {
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
                   setScore(score + 1);
+  
+                  let newCards = getRandomCards();
+                  let wrappedCards = {
+                    first: newCards[0],
+                    second: newCards[1],
+                    third: newCards[2],
+                    fourth: newCards[3]
+                  };
+
+                  console.log(wrappedCards);
+                  set(ref(database, 'cards/'), wrappedCards);
                 }
                 else if(code[0] == "incorrect") {
                   thisRound.message = "Incorrect!";
@@ -163,17 +174,6 @@ export default function Home() {
                 setRounds(newRounds);
                 setSetCount(setCount + 1);
                 input.value = "";
-
-                let newCards = getRandomCards();
-                let wrappedCards = {
-                  first: newCards[0],
-                  second: newCards[1],
-                  third: newCards[2],
-                  fourth: newCards[3]
-                };
-
-                console.log(wrappedCards);
-                set(ref(database, 'cards/'), wrappedCards);
               }}>{submitText}</button>
             </div>
 
