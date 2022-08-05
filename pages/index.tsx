@@ -146,8 +146,6 @@ export default function Home() {
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
                   setScore(score + 1);
-
-
                 }
                 else if(code[0] == "incorrect") {
                   thisRound.message = "Incorrect!";
@@ -165,6 +163,11 @@ export default function Home() {
                 setRounds(newRounds);
                 setSetCount(setCount + 1);
                 input.value = "";
+
+                let newCards = getRandomCards();
+                set(ref(database, 'cards/'), {
+
+                });
               }}>{submitText}</button>
             </div>
 
