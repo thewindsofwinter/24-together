@@ -203,10 +203,10 @@ export default function Home() {
             ))}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); }}>
+              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); updateCardDB(); }}>
                 New Game
               </div>
-              <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>
+              <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); updateCardDB(); }}>
                 Next Set
               </div>
             </div>
