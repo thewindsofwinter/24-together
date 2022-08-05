@@ -6,6 +6,7 @@ export interface RoundInfo {
   color: number;
   message: string;
   query: string;
+  setCt: number;
 }
 
 export default function HistoryInfo(props: RoundInfo) {
