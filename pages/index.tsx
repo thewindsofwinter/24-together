@@ -4,9 +4,8 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-import { getDatabase } from "firebase/database";
+import { get, getDatabase, ref } from "firebase/database";
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
@@ -101,7 +100,13 @@ export default function Home() {
   useEffect(() => {
     console.log("getting cards from firebase");
 
-    setCards(getRandomCards());
+    get(ref(database), 'cards').then((val) => {
+      let cardVals = val.val().cards;
+      console.log(cardVals)
+      setCards([cardVals.first, cardVals.second, cardVals.third, cardVals.fourth] as CardType[]);
+    });
+
+    // setCards(getRandomCards());
     console.log(cards);
   }, [setCount]);
 
