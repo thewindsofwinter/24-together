@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-import { get, getDatabase, onChildChanged, onValue, ref } from "firebase/database";
+import { get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -146,6 +146,8 @@ export default function Home() {
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
                   setScore(score + 1);
+
+
                 }
                 else if(code[0] == "incorrect") {
                   thisRound.message = "Incorrect!";
@@ -161,7 +163,6 @@ export default function Home() {
                   newRounds = newRounds.slice(-3);
                 }
                 setRounds(newRounds);
-
                 setSetCount(setCount + 1);
                 input.value = "";
               }}>{submitText}</button>
