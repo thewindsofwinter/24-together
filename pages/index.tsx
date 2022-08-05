@@ -165,9 +165,15 @@ export default function Home() {
                 input.value = "";
 
                 let newCards = getRandomCards();
-                set(ref(database, 'cards/'), {
+                let wrappedCards = {
+                  first: newCards[0],
+                  second: newCards[1],
+                  third: newCards[2],
+                  fourth: newCards[3]
+                };
 
-                });
+                console.log(wrappedCards);
+                set(ref(database, 'cards/'), wrappedCards);
               }}>{submitText}</button>
             </div>
 
