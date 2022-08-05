@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-import { get, getDatabase, ref } from "firebase/database";
+import { get, getDatabase, onChildChanged, onValue, ref } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -95,20 +95,21 @@ export default function Home() {
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
 
+
   // head off hydration problem
-  useEffect(() => setCards(getRandomCards()), [])
   useEffect(() => {
     console.log("getting cards from firebase");
 
-    get(ref(database), 'cards').then((val) => {
-      let cardVals = val.val().cards;
-      console.log(cardVals)
+    onValue(ref(database), (snapshot) => {
+      // console.log(snapshot.val());
+      let cardVals = snapshot.val().cards;
+      console.log(cardVals);
       setCards([cardVals.first, cardVals.second, cardVals.third, cardVals.fourth] as CardType[]);
     });
 
     // setCards(getRandomCards());
     console.log(cards);
-  }, [setCount]);
+  }, [])
 
   return (
     <div className={styles.container}>
