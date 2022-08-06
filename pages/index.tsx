@@ -111,7 +111,7 @@ export function newGame(username: string) {
     query: ""
   }
 
-  fetch("/api/pusher", {
+  fetch("/api/pusher-newround", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -180,6 +180,14 @@ export default function Home() {
 
       rounds.current = [...rounds.current, value];
       setSetCount((setCount) => { return setCount + 1; })
+    });
+
+    channel.bind('restart-game', function(data) {
+      let value = data.history as RoundInfo;
+
+      rounds.current = [...rounds.current, value];
+      setScore(0);
+      setSetCount(0);
     });
   }, [])
 
@@ -266,12 +274,7 @@ export default function Home() {
             ))}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => {
-                setScore(0);
-                // Hack -- fix later
-                setSetCount(-1);
-                newGame(username);
-              }}>
+              <div className={styles.newGame} onClick={() => { newGame(username); }}>
                 New Game
               </div>
               <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
