@@ -140,6 +140,7 @@ export function nextRound(username: string) {
 }
 
 export default function Home() {
+  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
@@ -167,7 +168,6 @@ export default function Home() {
     });
 
     // setCards(getRandomCards());
-    console.log(cards);
 
     const pusher = new Pusher(process.env.NEXT_PUBLIC_API_KEY, {
       cluster: process.env.NEXT_PUBLIC_CLUSTER,
@@ -205,14 +205,7 @@ export default function Home() {
             <div className="basis-8">
               <button type="button"
                       className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
-                <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                     xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd"
-                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-
-
+                 <img className="w-5 h-5" src="/arrow-icon.svg" />
                 <span className="sr-only">Icon description</span>
               </button>
 
@@ -304,6 +297,6 @@ export default function Home() {
           </div>
           </div>
         </main>
-      </div>
+    </div>
   )
 }
