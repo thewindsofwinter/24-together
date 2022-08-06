@@ -9,10 +9,10 @@ export const pusher = new Pusher({
 });
 
 export default async function handler(req, res) {
-  const newGame = req.body;
+  const notif = req.body;
 
   const response = await pusher.trigger("history", "restart-game", {
-    newGame,
+    notif,
   });
 
   res.json({ message: "completed" });

@@ -183,7 +183,7 @@ export default function Home() {
     });
 
     channel.bind('restart-game', function(data) {
-      let value = data.history as RoundInfo;
+      let value = data.notif as RoundInfo;
 
       rounds.current = [...rounds.current, value];
       setScore(0);
