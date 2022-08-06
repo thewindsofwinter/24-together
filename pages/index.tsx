@@ -110,7 +110,7 @@ export function newGame(username: string) {
   let thisRound = {
     values: [],
     color: 2,
-    message: "INFO: " + username + " reset game",
+    message: "[INFO] " + username + " reset game",
     query: ""
   }
 
@@ -129,7 +129,7 @@ export function nextRound(username: string) {
   let thisRound = {
     values: [],
     color: 2,
-    message: "INFO: " + username + " skipped round",
+    message: "[INFO] " + username + " skipped round",
     query: ""
   }
 
@@ -147,17 +147,19 @@ export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
-  const rounds = useRef<RoundInfo[]>([{
-    values: [],
-    color: 2,
-    message: "Welcome, " + username + "!",
-    query: ""
-  }] as RoundInfo);
+  const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
 
   // head off hydration problem
   useEffect(() => {
+    rounds.current = [{
+      values: [],
+      color: 2,
+      message: "[INFO] Welcome, " + username + "!",
+      query: ""
+    } as RoundInfo];
+
     console.log("getting cards from firebase");
 
     onValue(ref(database), (snapshot) => {
