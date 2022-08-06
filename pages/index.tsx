@@ -1,9 +1,24 @@
 import Head from 'next/head'
-import React, { useEffect, useState, useCallback } from 'react';
+import Pusher from 'pusher-js'
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
+import { get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  // ...
+  // The value of `databaseURL` depends on the location of the database
+  databaseURL: "https://together-24game-default-rtdb.firebaseio.com",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Realtime Database and get a reference to the service
+const database = getDatabase(app);
 
 export function getRandomCards(): CardType[] {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
@@ -71,132 +86,217 @@ export function verifyOperations(input: string, cards: CardType[]): string {
   }
 }
 
+export function updateCardDB() {
+  let newCards = getRandomCards();
+  let wrappedCards = {
+    first: newCards[0],
+    second: newCards[1],
+    third: newCards[2],
+    fourth: newCards[3]
+  };
+
+  console.log(wrappedCards);
+  set(ref(database, 'cards/'), wrappedCards);
+}
+
+export function newGame(username: string) {
+  updateCardDB();
+
+  let thisRound = {
+    values: [],
+    color: 2,
+    setCt: 0,
+    message: "[INFO] " + username + " reset game",
+    query: ""
+  }
+
+  fetch("/api/pusher-newround", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(thisRound),
+  });
+}
+
+export function nextRound(username: string) {
+  updateCardDB();
+
+  let thisRound = {
+    values: [],
+    color: 2,
+    setCt: 0,
+    message: "[INFO] " + username + " skipped the last round",
+    query: ""
+  }
+
+  fetch("/api/pusher", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(thisRound),
+  });
+}
+
 export default function Home() {
+  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
-  const [rounds, setRounds] = useState<RoundInfo[]>([]);
+  const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
 
   // head off hydration problem
-  useEffect(() => setCards(getRandomCards()), [])
   useEffect(() => {
-    console.log("generating new cards");
-    setCards(getRandomCards());
-    console.log(cards);
-  }, [setCount]);
+    rounds.current = [{
+      values: [],
+      color: 2,
+      setCt: 0,
+      message: "[INFO] Welcome, " + username + "!",
+      query: ""
+    } as RoundInfo];
+
+    console.log("getting cards from firebase");
+
+    onValue(ref(database), (snapshot) => {
+      // console.log(snapshot.val());
+      let cardVals = snapshot.val().cards;
+      console.log(cardVals);
+      setCards([cardVals.first, cardVals.second, cardVals.third, cardVals.fourth] as CardType[]);
+    });
+
+    // setCards(getRandomCards());
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_API_KEY, {
+      cluster: process.env.NEXT_PUBLIC_CLUSTER,
+    });
+
+    const channel = pusher.subscribe('history');
+
+    channel.bind('send-history', function(data) {
+      let value = data.history as RoundInfo;
+
+      rounds.current = [...rounds.current, value];
+      setSetCount((setCount) => { return setCount + 1; })
+    });
+
+    channel.bind('restart-game', function(data) {
+      let value = data.notif as RoundInfo;
+
+      rounds.current = [...rounds.current, value];
+      setScore(0);
+      setSetCount(0);
+    });
+  }, [])
 
   return (
-      <div className={styles.container}>
-        <Head>
-          <title>24 | Multiplayer Game</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+    <div className={styles.container}>
+      <Head>
+        <title>24 | Multiplayer Game</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <main className={styles.main}>
-          <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
-          <div className={styles.wrapper}>
-            <div className={styles.play}>
-              <div className="basis-8">
-                <button type="button"
-                        className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
-                  <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                       xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                          clip-rule="evenodd"></path>
-                  </svg>
+      <main className={styles.main}>
+        <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
+        <div className={styles.wrapper}>
+          <div className={styles.play}>
+            <div className="basis-8">
+              <button type="button"
+                      className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
+                 <img className="w-5 h-5" src="/arrow-icon.svg" />
+                <span className="sr-only">Icon description</span>
+              </button>
 
 
-                  <span className="sr-only">Icon description</span>
-                </button>
-
-
-                <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-3xl font-bold">
-                  Set {setCount}
-                </div>
-              </div>
-              <div className="basis-4/5 grow ">
-                <div className="flex flex-wrap -mb-4 -mx-2 w-full">
-                  {cards.map((card, index) => (
-                      <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
-                  ))}
-                </div>
-              </div>
-              <div className={styles.inputBar}>
-                <input className={styles.input} id="input" autoComplete="off"></input>
-                <button className={styles.toggleSubmit} onClick={() => {
-                  let input = document.getElementById("input") as HTMLInputElement;
-                  let code = verifyOperations(input.value, cards).split('-');
-                  let thisRound = {
-                    values: cards,
-                    color: 0,
-                    message: "",
-                    setCt: setCount,
-                    query: input.value
-                  }
-                  console.log(thisRound)
-
-                  if(code[0] == "correct") {
-                    thisRound.message = "Correct!";
-                    setScore(score + 1);
-                  }
-                  else if(code[0] == "incorrect") {
-                    thisRound.message = "Incorrect!";
-                    thisRound.color = 1;
-                  }
-                  else {
-                    thisRound.message = "Invalid: " + code[1];
-                    thisRound.color = 2;
-                  }
-
-                  let newRounds = [...rounds, thisRound as RoundInfo];
-                  if(newRounds.length >= 10) {
-                    newRounds = newRounds.slice(-10);
-                  }
-                  setRounds(newRounds);
-
-                  setSetCount(setCount + 1);
-                  input.value = "";
-                }}>{submitText}</button>
-              </div>
-
-              <div className="text-xs w-[9/10] mx-auto" id="instructions">
-                <strong>Instructions:</strong> For each round, enter the point values of all four cards
-                with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
-                parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
-                opponents to win the round!&nbsp;
-                <a className={styles.hideButton} onClick={() =>
-                { document.getElementById("instructions").style.display = "none"; }
-                }>[hide]</a>
+              <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-3xl font-bold">
+                Set {setCount}
               </div>
             </div>
-            <div className="basis-1/4 bg-accent rounded-r-2xl flex flex-col">
-              <div className={styles.score}>
-                Score: {score} | Set #: {setCount}
-              </div>
-              <div className="basis-8 grow shrink overflow-auto space-y-2">
-                {rounds.slice().reverse().map((round, index) => (
-                    <HistoryInfo key={"history-" + index.toString()}
-                                 values={round.values}
-                                 color={round.color}
-                                 message={round.message}
-                                 setCt={round.setCt}
-                                 query={round.query}/>
+            <div className="basis-4/5 grow ">
+              <div className="flex flex-wrap -mb-4 -mx-2 w-full">
+                {cards.map((card, index) => (
+                    <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
                 ))}
               </div>
-              <div className={styles.controls}>
-                <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); setCards(getRandomCards()); }}>
-                  New Game
-                </div>
-                <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); }}>
-                  Next Set
-                </div>
+            </div>
+            <div className={styles.inputBar}>
+              <input className={styles.input} id="input"></input>
+              <button className={styles.toggleSubmit} onClick={() => {
+                let input = document.getElementById("input") as HTMLInputElement;
+
+                let code = verifyOperations(input.value, cards).split('-');
+                let thisRound = {
+                  values: cards,
+                  color: 0,
+                  message: "",
+                  query: "Query: \"" + input.value + "\" by " + username
+                }
+                console.log(thisRound)
+
+                if(code[0] == "correct") {
+                  thisRound.message = "Correct!";
+                  updateCardDB();
+                }
+                else if(code[0] == "incorrect") {
+                  thisRound.message = "Incorrect!";
+                  thisRound.color = 1;
+                }
+                else {
+                  thisRound.message = "Invalid: " + code[1];
+                  thisRound.color = 2;
+                }
+
+                console.log(JSON.stringify(thisRound))
+                // send info, answer not important
+                fetch("/api/pusher", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(thisRound),
+                });
+
+                input.value = "";
+              }}>{submitText}</button>
+            </div>
+
+            <div className="text-xs w-[9/10] mx-auto" id="instructions">
+              <strong>Instructions:</strong> For each round, enter the point values of all four cards
+              with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
+              parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
+              opponents to win the round!&nbsp;
+              <a className={styles.hideButton} onClick={() =>
+                { document.getElementById("instructions").style.display = "none"; }
+              }>[hide]</a>
+            </div>
+          </div>
+          <div className="basis-1/4 bg-accent rounded-r-2xl flex flex-col">
+            <div className={styles.score}>
+              Score: {score} | Set #: {setCount}
+            </div>
+            <div className="basis-8 grow shrink overflow-auto space-y-2">
+              {rounds.current.slice().reverse().map((round, index) => (
+                  <HistoryInfo key={"history-" + index.toString()}
+                               values={round.values}
+                               color={round.color}
+                               message={round.message}
+                               setCt={round.setCt}
+                               query={round.query}/>
+              ))}
+            </div>
+            <div className={styles.controls}>
+              <div className={styles.newGame} onClick={() => { newGame(username); }}>
+                New Game
+              </div>
+              <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
+                Next Set
               </div>
             </div>
           </div>
+          </div>
         </main>
-      </div>
+    </div>
   )
 }
