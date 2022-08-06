@@ -101,14 +101,56 @@ export function updateCardDB() {
   set(ref(database, 'cards/'), wrappedCards);
 }
 
+export function newGame(username: string) {
+  setScore(0);
+  // Hack -- fix later
+  setSetCount(-1);
+  updateCardDB();
+
+  let thisRound = {
+    values: [],
+    color: 2,
+    message: "INFO: " + username + " reset game",
+    query: ""
+  }
+
+  fetch("/api/pusher", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(thisRound),
+  });
+}
+
+export function nextRound(username: string) {
+  updateCardDB();
+
+  let thisRound = {
+    values: [],
+    color: 2,
+    message: "INFO: " + username + " skipped round",
+    query: ""
+  }
+
+  fetch("/api/pusher", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(thisRound),
+  });
+}
+
 export default function Home() {
+  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([{
     values: [],
-    color: 1,
-    message: "connected to server!",
+    color: 2,
+    message: "INFO: Server connection established",
     query: ""
   }] as RoundInfo);
   // Might make this a toggle button
@@ -225,10 +267,10 @@ export default function Home() {
             ))}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { setScore(0); setSetCount(0); updateCardDB(); }}>
+              <div className={styles.newGame} onClick={() => { newGame(username); }}>
                 New Game
               </div>
-              <div className={styles.nextSet} onClick={() => { setSetCount(setCount + 1); updateCardDB(); }}>
+              <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
                 Next Set
               </div>
             </div>
