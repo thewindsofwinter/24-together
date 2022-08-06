@@ -5,11 +5,11 @@ export const pusher = new Pusher({
   key: process.env.API_KEY,
   secret: process.env.SECRET,
   cluster: process.env.NEXT_PUBLIC_CLUSTER,
-  encrypted: true
+  useTLS: true
 });
 
 export default async function handler(req, res) {
-  const { history } = req.body;
+  const history = req.body;
 
   const response = await pusher.trigger("history", "send-history", {
     history,

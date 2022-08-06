@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Pusher from 'pusher-js'
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
@@ -105,23 +105,12 @@ export default function Home() {
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(0);
   const [cards, setCards] = useState<CardType[]>([]);
-  const [rounds, setRounds] = useState<RoundInfo[]>([]);
+  const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
 
-
   // head off hydration problem
   useEffect(() => {
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_API_KEY, {
-      cluster: process.env.NEXT_PUBLIC_CLUSTER,
-    });
-    
-    const channel = pusher.subscribe('history');
-
-    channel.bind('history', function(data) {
-      alert(JSON.stringify(data));
-    });
-
     console.log("getting cards from firebase");
 
     onValue(ref(database), (snapshot) => {
@@ -133,6 +122,19 @@ export default function Home() {
 
     // setCards(getRandomCards());
     console.log(cards);
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_API_KEY, {
+      cluster: process.env.NEXT_PUBLIC_CLUSTER,
+    });
+
+    const channel = pusher.subscribe('history');
+
+    channel.bind('send-history', function(data) {
+      let value = data.history as HistoryInfo;
+
+      rounds.current = [...rounds.current, value];
+      setSetCount((setCount) => { return setCount + 1; })
+    });
   }, [])
 
   return (
@@ -180,12 +182,16 @@ export default function Home() {
                   thisRound.color = 2;
                 }
 
-                let newRounds = [...rounds, thisRound as RoundInfo];
-                if(newRounds.length >= 3) {
-                  newRounds = newRounds.slice(-3);
-                }
-                setRounds(newRounds);
-                setSetCount(setCount + 1);
+                console.log(JSON.stringify(thisRound))
+                // send info, answer not important
+                fetch("/api/pusher", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(thisRound),
+                });
+
                 input.value = "";
               }}>{submitText}</button>
             </div>
@@ -205,7 +211,7 @@ export default function Home() {
               Score: {score} | Set #: {setCount}
             </div>
             <div className={styles.history}>
-            {rounds.map((round, index) => (
+            {rounds.current.map((round, index) => (
               <HistoryInfo key={"history-" + index.toString()}
                 values={round.values}
                 color={round.color}
