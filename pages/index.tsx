@@ -129,7 +129,7 @@ export function nextRound(username: string) {
   let thisRound = {
     values: [],
     color: 2,
-    message: "[INFO] " + username + " skipped round",
+    message: "[INFO] " + username + " skipped the last round",
     query: ""
   }
 
