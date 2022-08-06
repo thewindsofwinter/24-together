@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Pusher from 'pusher-js'
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
@@ -6,7 +7,6 @@ import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 import { get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
-
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
@@ -34,6 +34,7 @@ export function getRandomCards(): CardType[] {
 
   return fourCards;
 }
+
 
 export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("received " + input)
@@ -111,6 +112,16 @@ export default function Home() {
 
   // head off hydration problem
   useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_API_KEY, {
+      cluster: process.env.NEXT_PUBLIC_CLUSTER,
+    });
+    
+    const channel = pusher.subscribe('history');
+
+    channel.bind('history', function(data) {
+      alert(JSON.stringify(data));
+    });
+
     console.log("getting cards from firebase");
 
     onValue(ref(database), (snapshot) => {
