@@ -102,9 +102,6 @@ export function updateCardDB() {
 }
 
 export function newGame(username: string) {
-  setScore(0);
-  // Hack -- fix later
-  setSetCount(-1);
   updateCardDB();
 
   let thisRound = {
@@ -269,7 +266,12 @@ export default function Home() {
             ))}
             </div>
             <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { newGame(username); }}>
+              <div className={styles.newGame} onClick={() => {
+                setScore(0);
+                // Hack -- fix later
+                setSetCount(-1);
+                newGame(username);
+              }}>
                 New Game
               </div>
               <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
