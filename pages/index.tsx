@@ -150,7 +150,7 @@ export default function Home() {
   const rounds = useRef<RoundInfo[]>([{
     values: [],
     color: 2,
-    message: "INFO: Server connection established",
+    message: "Welcome, " + username + "!",
     query: ""
   }] as RoundInfo);
   // Might make this a toggle button
