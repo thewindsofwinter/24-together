@@ -214,7 +214,7 @@ export default function Home() {
                   values: cards,
                   color: 0,
                   message: "",
-                  query: input.value
+                  query: "Query: " + input.value + " by " + username
                 }
                 console.log(thisRound)
 
