@@ -176,7 +176,7 @@ export default function Home() {
     const channel = pusher.subscribe('history');
 
     channel.bind('send-history', function(data) {
-      let value = data.history as HistoryInfo;
+      let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
       setSetCount((setCount) => { return setCount + 1; })
