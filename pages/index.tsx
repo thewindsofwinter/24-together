@@ -269,30 +269,30 @@ export default function Home() {
               }}>{submitText}</button>
             </div>
 
-              <div className="text-xs w-[9/10] mx-auto" id="instructions">
-                <strong>Instructions:</strong> For each round, enter the point values of all four cards
-                with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
-                parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
-                opponents to win the round!&nbsp;
-                <a className={styles.hideButton} onClick={() =>
+            <div className="text-xs w-[9/10] mx-auto" id="instructions">
+              <strong>Instructions:</strong> For each round, enter the point values of all four cards
+              with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
+              parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
+              opponents to win the round!&nbsp;
+              <a className={styles.hideButton} onClick={() =>
                 { document.getElementById("instructions").style.display = "none"; }
               }>[hide]</a>
             </div>
           </div>
           <div className="basis-1/4 bg-accent rounded-r-2xl flex flex-col">
-              <div className={styles.score}>
-                Score: {score} | Set #: {setCount}
-              </div>
-              <div className="basis-8 grow shrink overflow-auto space-y-2">
-                {rounds.current.slice().reverse().map((round, index) => (
-                    <HistoryInfo key={"history-" + index.toString()}
-                                 values={round.values}
-                                 color={round.color}
-                                 message={round.message}
-                                 setCt={round.setCt}
-                                 query={round.query}/>
-                ))}
-              </div>
+            <div className={styles.score}>
+              Score: {score} | Set #: {setCount}
+            </div>
+            <div className="basis-8 grow shrink overflow-auto space-y-2">
+              {rounds.current.slice().reverse().map((round, index) => (
+                  <HistoryInfo key={"history-" + index.toString()}
+                               values={round.values}
+                               color={round.color}
+                               message={round.message}
+                               setCt={round.setCt}
+                               query={round.query}/>
+              ))}
+            </div>
             <div className={styles.controls}>
               <div className={styles.newGame} onClick={() => { newGame(username); }}>
                 New Game
@@ -301,6 +301,7 @@ export default function Home() {
                 Next Set
               </div>
             </div>
+          </div>
           </div>
         </main>
       </div>
