@@ -20,16 +20,22 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-export function getRandomCards(): CardType[] {
+export async function getRandomCards(): CardType[] {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
+  let ok = false;
   let fourCards = [] as CardType[];
 
-  for(var i = 0; i < 4; i++) {
-    fourCards.push({
-      suit: suits[Math.floor(Math.random() * 4)],
-      // value: Math.ceil(Math.random() * 13)
-      value: 1,
-    });
+  while(!ok) {
+    fourCards = []
+    for(var i = 0; i < 4; i++) {
+      fourCards.push({
+        suit: suits[Math.floor(Math.random() * 4)],
+        // value: Math.ceil(Math.random() * 13)
+        value: 1,
+      });
+    }
+
+    ok = await !isUnsolvable(getCardsSorted(fourCards));
   }
 
   return fourCards;
@@ -99,8 +105,8 @@ export function getCardsSorted(cards: CardType[]): number[] {
   return numbers;
 }
 
-export function isUnsolvable(sortedCards: number[]): boolean {
-  fetch('unsolvable.txt')
+export async function isUnsolvable(sortedCards: number[]): boolean {
+  let val = await fetch('unsolvable.txt')
   .then(response => response.text())
   .then(text => {
     let str = text.split(/\r?\n/);
@@ -130,14 +136,12 @@ export function isUnsolvable(sortedCards: number[]): boolean {
 
     return false;
   })
+
+  return val;
 }
 
 export function updateCardDB() {
   let newCards = getRandomCards();
-  console.log(isUnsolvable(getCardsSorted(newCards)));
-  if(isUnsolvable(getCardsSorted(newCards))) {
-    console.log("unsolvable!");
-  }
 
   let wrappedCards = {
     first: newCards[0],
