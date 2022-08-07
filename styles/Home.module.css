@@ -30,7 +30,7 @@
   color: var(--title);
   font-family: "Encode Sans SC", sans-serif;
   text-transform: capitalize;
-  font-size: min(7.5vh, 5rem);
+  font-size: min(6.75vh, 5rem);
   text-align:right;
   margin-top: 0;
   margin-bottom: 1vh;
@@ -64,11 +64,6 @@ aspect ratio of 2:1 (side areas)
   content: "";
   display: block;
   padding-bottom: 48%;
-}
-
-.play {
-  flex-basis: 75%;
-  padding: 1rem;
 }
 
 .actions {
@@ -126,8 +121,8 @@ aspect ratio of 2:1 (side areas)
   background-color: black;
 }
 
-.newGame {
-  border-radius: 0 0 0 1rem;
+.nextSet {
+  border-radius: 0 0 1rem 0;
 }
 
 .inputBar {
@@ -149,6 +144,7 @@ aspect ratio of 2:1 (side areas)
 .input, .toggleSubmit {
   padding: 1rem;
   font-size: 1.5rem;
+  min-width: 0;
 }
 
 .input {

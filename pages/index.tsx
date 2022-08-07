@@ -196,8 +196,6 @@ export function nextRound(username: string) {
   });
 }
 
-
-
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
@@ -225,7 +223,7 @@ export default function Home() {
         setTimeout(function() { setSubmitToggle(false); }, 200);
       }
     });
-    
+
     let suffix = String(new Date().getTime()).substr(-3)
     // 0.7% chance
     if(parseInt(suffix) > 992) {
@@ -304,25 +302,27 @@ export default function Home() {
         <div className={styles.wrapper}>
 
           {/*player/chat*/}
-          <div className="basis-1/4 bg-accent rounded-l-2xl flex flex-col bg-green-50">
-            <div className="basis-8 grow-0 shrink-0 text-center font-black text-black text-2xl my-4 p-4">
+          <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50">
+            <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
               Player List
             </div>
             <div className="basis-8 grow shrink overflow-auto space-y-8">
 
+
             </div>
-            <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { newGame(username); }}>
-                New Game
-              </div>
-              <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
-                Next Set
-              </div>
+            <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
+            <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
+              <span className="align-middle font-bold">{username}:</span></div>
+            <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="input"></input>
+            <button className="outline-none bg-white min-w-fit">
+              <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
+            </button>
+
             </div>
           </div>
 
 
-          <div className={styles.play}>
+          <div className="basis-3/5 p-4 flex flex-col">
 
             <div className="basis-8">
               <button type="button"
@@ -336,13 +336,14 @@ export default function Home() {
                 Set {setCount}
               </div>
             </div>
-            <div className="basis-4/5 grow ">
+            <div className="basis-4/5 grow">
               <div className="flex flex-wrap -mb-4 -mx-2 w-full">
                 {cards.map((card, index) => (
                     <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
                 ))}
               </div>
             </div>
+
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
               <button className={submitToggle ? styles.hovered + ' ' + styles.toggleSubmit
@@ -386,7 +387,7 @@ export default function Home() {
               }}>{submitText}</button>
             </div>
 
-            <div className="text-xs w-[9/10] mx-auto" id="instructions">
+            <div className="text-xs basis-8 mx-auto mt-2" id="instructions">
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
               parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be
@@ -397,12 +398,12 @@ export default function Home() {
             </div>
           </div>
           {/*timer/history*/}
-          <div className="basis-1/4 bg-accent rounded-r-2xl flex flex-col bg-green-50">
-            <div className="basis-8 grow-0 shrink-0 text-center text-black text-3xl my-3 p-4">
-              <img className="w-8 h-8 inline-block mx-0.5 pb-0.5"  src="/timer-icon.svg" />
+          <div className="basis-1/5 bg-accent rounded-r-2xl flex flex-col bg-green-50">
+            <div className="basis-8 grow-0 shrink-0 text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-tr-2xl">
+              <img className="w-8 h-8 inline-block mx-0.5 pb-0.5" src="/timer-icon.svg" />
               1:05
             </div>
-            <div className="basis-8 grow shrink overflow-y-scroll space-y-8">
+            <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
               {rounds.current.slice().reverse().map((round, index) => (
                   <HistoryInfo key={"history-" + index.toString()}
                                values={round.values}
@@ -413,12 +414,14 @@ export default function Home() {
               ))}
               <div className="mb-3"/>
             </div>
-            <div className="flex flex-row border-2 rounded-br-xl">
-            <input className="flex-grow border-0 h-12 align-top outline-none p-1" id="input"></input>
-            <button className="outline-none bg-white rounded-br-xl">
-              <img src="/right-arrow.svg" className="w-4 h-4 mr-1"/>
-            </button>
 
+            <div className={styles.controls}>
+              <div className={styles.newGame} onClick={() => { newGame(username); }}>
+                New Game
+              </div>
+              <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
+                Next Set
+              </div>
             </div>
           </div>
           </div>
