@@ -209,6 +209,20 @@ export default function Home() {
 
   // head off hydration problem
   useEffect(() => {
+    // Get the input field
+    var input = document.getElementById("input");
+
+    // Execute a function when the user presses a key on the keyboard
+    input.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("submit").click();
+      }
+    });
+
     rounds.current = [{
       values: [],
       color: 2,
@@ -303,7 +317,7 @@ export default function Home() {
             </div>
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
-              <button className={styles.toggleSubmit} onClick={() => {
+              <button className={styles.toggleSubmit} id="submit" onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
 
                 let code = verifyOperations(input.value, cards).split('-');
