@@ -105,8 +105,8 @@ export function isUnsolvable(sortedCards: number[]): boolean {
   .then(text => {
     let str = text.split(/\r?\n/);
     // console.log(str[0].split(" "));
-    str.forEach(element => {
-      let tokens = element.split(" ");
+    //str.forEach(element => {
+      let tokens = str[0].split(" ");
       let ok = true;
       if(sortedCards.length != tokens.length) {
         ok = false;
@@ -121,7 +121,7 @@ export function isUnsolvable(sortedCards: number[]): boolean {
       if(ok) {
         return true;
       }
-    });
+    //});
 
     return false;
   })
