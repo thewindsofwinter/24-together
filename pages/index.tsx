@@ -206,6 +206,7 @@ export default function Home() {
   const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
+  const [submitToggle, setSubmitToggle] = useState<boolean>(false);
 
   // head off hydration problem
   useEffect(() => {
@@ -219,7 +220,9 @@ export default function Home() {
         // Cancel the default action, if needed
         event.preventDefault();
         // Trigger the button element with a click
+        setSubmitToggle(true);
         document.getElementById("submit").click();
+        setTimeout(function() { setSubmitToggle(false); }, 200);
       }
     });
 
@@ -317,7 +320,8 @@ export default function Home() {
             </div>
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
-              <button className={styles.toggleSubmit} id="submit" onClick={() => {
+              <button className={submitToggle ? styles.hovered + ' ' + styles.toggleSubmit
+                : styles.toggleSubmit} id="submit" onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
 
                 let code = verifyOperations(input.value, cards).split('-');
