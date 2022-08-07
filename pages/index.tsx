@@ -242,8 +242,8 @@ export default function Home() {
 
     resize(hide, txt);
     txt.addEventListener("input", function() {
-      console.log("triggered");
       resize(hide, txt);
+      setUsername(txt.value)
     });
 
     rounds.current = [{
@@ -332,7 +332,7 @@ export default function Home() {
                 <input id="txt" className={styles.usernameInput}></input>:
               </span>
             </div>
-            <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="input"></input>
+            <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
             <button className="outline-none bg-white min-w-fit">
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
             </button>
