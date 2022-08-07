@@ -219,7 +219,7 @@ export default function Home() {
 
     // Only need to do this at the start
     console.log("getting round from firebase")
-    get(child(dbRef, `set`)).then((snapshot) => {
+    get(child(ref(database), `set`)).then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
         setSetCount(snapshot.val());
