@@ -22,19 +22,22 @@ const database = getDatabase(app);
 
 export async function getRandomCards(): CardType[] {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
-  let ok = false;
+  let unsolvable = true;
   let fourCards = [] as CardType[];
 
-  while(!ok) {
+  while(unsolvable) {
     fourCards = []
     for(var i = 0; i < 4; i++) {
       fourCards.push({
         suit: suits[Math.floor(Math.random() * 4)],
-        value: Math.ceil(Math.random() * 13)
+        // value: Math.ceil(Math.random() * 13)
+        value: 1
       });
     }
 
-    ok = await !isUnsolvable(getCardsSorted(fourCards));
+    console.log(fourCards)
+    unsolvable = await isUnsolvable(getCardsSorted(fourCards));
+    console.log(unsolvable)
   }
 
   return fourCards;
@@ -109,9 +112,10 @@ export async function isUnsolvable(sortedCards: number[]): boolean {
   .then(response => response.text())
   .then(text => {
     let str = text.split(/\r?\n/);
-    console.log(str[0].split(" "));
+    let foundMatch = false;
+    // console.log(str[0].split(" "));
     str.forEach(element => {
-      let tokens = str[0].split(" ");
+      let tokens = element.split(" ");
       // console.log(tokens.length + " " + sortedCards.length)
       let ok = true;
       if(sortedCards.length != tokens.length) {
@@ -125,15 +129,15 @@ export async function isUnsolvable(sortedCards: number[]): boolean {
           }
         }
       }
-      console.log(ok)
+      // console.log(ok)
 
       if(ok) {
-        console.log(ok)
-        return true;
+        // console.log(ok + " " + sortedCards + " " + tokens)
+        foundMatch = true;
       }
     });
 
-    return false;
+    return foundMatch;
   })
 
   return val;
