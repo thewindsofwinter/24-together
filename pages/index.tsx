@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-import { get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
+import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -199,9 +199,9 @@ export function nextRound(username: string) {
 
 
 export default function Home() {
-  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
+  const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
-  const [setCount, setSetCount] = useState<number>(0);
+  const [setCount, setSetCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
@@ -225,14 +225,35 @@ export default function Home() {
         setTimeout(function() { setSubmitToggle(false); }, 200);
       }
     });
+    
+    let suffix = String(new Date().getTime()).substr(-3)
+    // 0.7% chance
+    if(parseInt(suffix) > 992) {
+      suffix = "ket"
+    }
+    setUsername("birb-" + suffix)
 
     rounds.current = [{
       values: [],
       color: 2,
-      message: "[INFO] Welcome, " + username + "!",
+      message: "[INFO] Welcome, birb-" + suffix + "!",
       query: "",
       label: "System Message"
     } as RoundInfo];
+
+    // Only need to do this at the start
+    console.log("getting round from firebase")
+    get(child(ref(database), `set`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        setSetCount(snapshot.val());
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
 
     console.log("getting cards from firebase");
 
@@ -255,7 +276,10 @@ export default function Home() {
       let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
-      setSetCount((setCount) => { return setCount + 1; })
+      setSetCount((setCount) => {
+        set(ref(database, 'set/'), setCount + 1);
+        return setCount + 1;
+      })
     });
 
     channel.bind('restart-game', function(data) {
@@ -263,7 +287,8 @@ export default function Home() {
 
       rounds.current = [...rounds.current, value];
       setScore(0);
-      setSetCount(0);
+      set(ref(database, 'set/'), 1);
+      setSetCount(1);
     });
   }, [])
 
