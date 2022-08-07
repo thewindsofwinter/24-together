@@ -2,6 +2,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*@layer utilities {*/
+/*  .scrollbar::-webkit-scrollbar {*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*  }*/
+
+/*  .scrollbar::-webkit-scrollbar-track {*/
+/*    border-radius: 100vh;*/
+/*    background: #fff;*/
+/*  }*/
+
+
+/*  .scrollbar::-webkit-scrollbar-thumb {*/
+/*    background: var(--primary);*/
+/*    border-radius: 100vh;*/
+/*  }*/
+/*}*/
+
 html,
 body {
   padding: 0;
@@ -25,4 +44,27 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+@layer utilities {
+  .shadow-top {
+    height: 20px;
+    position: absolute;
+    background-image: radial-gradient(farthest-side at 50% 0%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+    display: none;
+  }
+
+  .shadow-bottom {
+    height: 20px;
+    position: absolute;
+    background-image: radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+    display: none;
+  }
+
+  .scrollbox {
+    flex-basis: 2rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow-y: scroll;
+  }
 }
