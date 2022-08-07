@@ -199,7 +199,7 @@ export function nextRound(username: string) {
 
 
 export default function Home() {
-  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
+  const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
@@ -209,10 +209,17 @@ export default function Home() {
 
   // head off hydration problem
   useEffect(() => {
+    let suffix = String(new Date().getTime()).substr(-3)
+    // 0.7% chance
+    if(parseInt(suffix) > 992) {
+      suffix = "ket"
+    }
+    setUsername("birb-" + suffix)
+
     rounds.current = [{
       values: [],
       color: 2,
-      message: "[INFO] Welcome, " + username + "!",
+      message: "[INFO] Welcome, birb-" + suffix + "!",
       query: "",
       label: "System Message"
     } as RoundInfo];
