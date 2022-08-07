@@ -34,9 +34,9 @@ export async function getRandomCards(): Promise<CardType[]> {
       });
     }
 
-    console.log(fourCards)
+    // console.log(fourCards)
     unsolvable = await isUnsolvable(getCardsSorted(fourCards));
-    console.log(unsolvable)
+    // console.log(unsolvable)
   }
 
   return fourCards;
