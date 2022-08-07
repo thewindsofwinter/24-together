@@ -111,17 +111,17 @@ export async function isUnsolvable(sortedCards: number[]): boolean {
   .then(text => {
     let str = text.split(/\r?\n/);
     console.log(str[0].split(" "));
-    //str.forEach(element => {
+    str.forEach(element => {
       let tokens = str[0].split(" ");
-      console.log(tokens.length + " " + sortedCards.length)
+      // console.log(tokens.length + " " + sortedCards.length)
       let ok = true;
       if(sortedCards.length != tokens.length) {
         ok = false;
       } else {
         for(var i = 0; i < tokens.length; i++) {
-          console.log("hi " + sortedCards[i] + " " + tokens[i])
+          // console.log("hi " + sortedCards[i] + " " + tokens[i])
           if(sortedCards[i] != parseInt(tokens[i])) {
-            console.log(i + " " + sortedCards[i] + " " + parseInt(tokens[i]))
+            // console.log(i + " " + sortedCards[i] + " " + parseInt(tokens[i]))
             ok = false;
           }
         }
@@ -132,7 +132,7 @@ export async function isUnsolvable(sortedCards: number[]): boolean {
         console.log(ok)
         return true;
       }
-    //});
+    });
 
     return false;
   })
