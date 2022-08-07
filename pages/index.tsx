@@ -20,7 +20,7 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-export async function getRandomCards(): CardType[] {
+export async function getRandomCards(): Promise<CardType[]> {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
   let unsolvable = true;
   let fourCards = [] as CardType[];
@@ -106,7 +106,7 @@ export function getCardsSorted(cards: CardType[]): number[] {
   return numbers;
 }
 
-export async function isUnsolvable(sortedCards: number[]): boolean {
+export async function isUnsolvable(sortedCards: number[]): Promise<boolean> {
   let val = await fetch('unsolvable.txt')
   .then(response => response.text())
   .then(text => {
