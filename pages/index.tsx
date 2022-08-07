@@ -20,15 +20,23 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-export function getRandomCards(): CardType[] {
+export async function getRandomCards(): Promise<CardType[]> {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
+  let unsolvable = true;
   let fourCards = [] as CardType[];
 
-  for(var i = 0; i < 4; i++) {
-    fourCards.push({
-      suit: suits[Math.floor(Math.random() * 4)],
-      value: Math.ceil(Math.random() * 13)
-    });
+  while(unsolvable) {
+    fourCards = []
+    for(var i = 0; i < 4; i++) {
+      fourCards.push({
+        suit: suits[Math.floor(Math.random() * 4)],
+        value: Math.ceil(Math.random() * 13)
+      });
+    }
+
+    // console.log(fourCards)
+    unsolvable = await isUnsolvable(getCardsSorted(fourCards));
+    // console.log(unsolvable)
   }
 
   return fourCards;
@@ -86,8 +94,57 @@ export function verifyOperations(input: string, cards: CardType[]): string {
   }
 }
 
-export function updateCardDB() {
-  let newCards = getRandomCards();
+export function getCardsSorted(cards: CardType[]): number[] {
+  let numbers = [];
+  for (let index = 0; index < cards.length; index++) {
+    numbers.push(cards[index].value as number);
+  }
+  numbers.sort((a, b) => a - b);
+
+  console.log(numbers);
+
+  return numbers;
+}
+
+export async function isUnsolvable(sortedCards: number[]): Promise<boolean> {
+  let val = await fetch('unsolvable.txt')
+  .then(response => response.text())
+  .then(text => {
+    let str = text.split(/\r?\n/);
+    let foundMatch = false;
+    // console.log(str[0].split(" "));
+    str.forEach(element => {
+      let tokens = element.split(" ");
+      // console.log(tokens.length + " " + sortedCards.length)
+      let ok = true;
+      if(sortedCards.length != tokens.length) {
+        ok = false;
+      } else {
+        for(var i = 0; i < tokens.length; i++) {
+          // console.log("hi " + sortedCards[i] + " " + tokens[i])
+          if(sortedCards[i] != parseInt(tokens[i])) {
+            // console.log(i + " " + sortedCards[i] + " " + parseInt(tokens[i]))
+            ok = false;
+          }
+        }
+      }
+      // console.log(ok)
+
+      if(ok) {
+        // console.log(ok + " " + sortedCards + " " + tokens)
+        foundMatch = true;
+      }
+    });
+
+    return foundMatch;
+  })
+
+  return val;
+}
+
+export async function updateCardDB() {
+  let newCards = await getRandomCards();
+
   let wrappedCards = {
     first: newCards[0],
     second: newCards[1],
@@ -289,8 +346,8 @@ export default function Home() {
             <div className="text-xs w-[9/10] mx-auto" id="instructions">
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
-              parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
-              opponents to win the round!&nbsp;
+              parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be
+              solvable. Submit your answer before all your opponents to win the round!&nbsp;
               <a className={styles.hideButton} onClick={() =>
                 { document.getElementById("instructions").style.display = "none"; }
               }>[hide]</a>
