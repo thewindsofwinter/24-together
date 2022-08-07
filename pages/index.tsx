@@ -322,7 +322,7 @@ export default function Home() {
           </div>
 
 
-          <div className="basis-3/5 p-4">
+          <div className="basis-3/5 p-4 flex flex-col">
 
             <div className="basis-8">
               <button type="button"
@@ -343,6 +343,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
               <button className={submitToggle ? styles.hovered + ' ' + styles.toggleSubmit
@@ -386,7 +387,7 @@ export default function Home() {
               }}>{submitText}</button>
             </div>
 
-            <div className="text-xs basis-4/5 mx-auto" id="instructions">
+            <div className="text-xs basis-8 mx-auto mt-2" id="instructions">
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
               parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be
