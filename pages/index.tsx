@@ -312,7 +312,7 @@ export default function Home() {
             </div>
             <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
             <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
-              <span className="align-middle font-bold">{username}:</span></div>
+              <span className="font-bold"><input className={styles.usernameInput} value={username}></input>:</span></div>
             <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="input"></input>
             <button className="outline-none bg-white min-w-fit">
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>

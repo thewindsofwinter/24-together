@@ -174,11 +174,6 @@ aspect ratio of 2:1 (side areas)
   margin-right: auto;
 }
 
-.play {
-  display: flex;
-  flex-direction: column;
-}
-
 .hideButton {
   text-decoration: underline;
   user-select: none;
@@ -189,4 +184,16 @@ aspect ratio of 2:1 (side areas)
   font-weight: 800;
   color: black;
   transition: color 0.5s, font-weight 0.5s;
+}
+
+.usernameInput {
+  width: 80px;
+  min-width: 0;
+  background: none;
+  border-bottom: 2px dotted var(--primary);
+}
+
+.usernameInput:focus {
+  border-bottom: 2px solid var(--primary);
+  outline:none;
 }
