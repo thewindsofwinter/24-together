@@ -19,10 +19,11 @@ export interface CardType {
 
 const card = ({ val, suit, small }: Props) => {
     if (small) {
-        var cardIcon=<img className="block rounded-md aspect-[2/3] object-contain bg-white rounded-lg border border-gray-200 shadow-md hover:shadow-lg" src={"/card-assets/" + suit+ val.toString() + ".svg" }/ >;
+        var cardIcon=<img className="block rounded-md aspect-[2/3] object-contain bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg" src={"/card-assets/" + suit+ val.toString() + ".svg" }/ >;
             }
     else {
-    var cardIcon=<img className="block rounded-md sm:rounded-lg md:rounded-2xl aspect-[2/3] object-contain bg-white rounded-lg border border-gray-200 shadow-md hover:shadow-lg" src={"/card-assets/" + suit+ val.toString() + ".svg" }/ >}
+    var cardIcon=<img className="block rounded-md sm:rounded-lg md:rounded-2xl aspect-[2/3] object-contain bg-white rounded-lg border border-gray-200 shadow-md hover:shadow-lg" src={"/card-assets/" + suit+ val.toString() + ".svg" }/ >
+                }
 
 
     return (
