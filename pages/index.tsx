@@ -196,6 +196,11 @@ export function nextRound(username: string) {
   });
 }
 
+export function resize(hide: HTMLElement, txt: HTMLInputElement) {
+  hide.textContent = txt.value;
+  txt.style.width = hide.offsetWidth + "px";
+}
+
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
@@ -230,6 +235,13 @@ export default function Home() {
       suffix = "ket"
     }
     setUsername("birb-" + suffix)
+
+    const hide = document.getElementById('hide') as HTMLElement;
+    const txt = document.getElementById('txt') as HTMLInputElement;
+    txt.value = "birb-" + suffix;
+
+    resize(hide, txt);
+    txt.addEventListener("input", resize(hide, txt));
 
     rounds.current = [{
       values: [],
@@ -312,7 +324,11 @@ export default function Home() {
             </div>
             <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
             <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
-              <span className="font-bold"><input className={styles.usernameInput} value={username}></input>:</span></div>
+              <span className="font-bold">
+                <span id="hide"></span>
+                <input id="txt" className={styles.usernameInput}></input>:
+              </span>
+            </div>
             <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="input"></input>
             <button className="outline-none bg-white min-w-fit">
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
