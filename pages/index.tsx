@@ -206,9 +206,26 @@ export default function Home() {
   const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
+  const [submitToggle, setSubmitToggle] = useState<boolean>(false);
 
   // head off hydration problem
   useEffect(() => {
+    // Get the input field
+    var input = document.getElementById("input");
+
+    // Execute a function when the user presses a key on the keyboard
+    input.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        setSubmitToggle(true);
+        document.getElementById("submit").click();
+        setTimeout(function() { setSubmitToggle(false); }, 200);
+      }
+    });
+    
     let suffix = String(new Date().getTime()).substr(-3)
     // 0.7% chance
     if(parseInt(suffix) > 992) {
@@ -328,7 +345,8 @@ export default function Home() {
             </div>
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
-              <button className={styles.toggleSubmit} onClick={() => {
+              <button className={submitToggle ? styles.hovered + ' ' + styles.toggleSubmit
+                : styles.toggleSubmit} id="submit" onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
 
                 let code = verifyOperations(input.value, cards).split('-');
