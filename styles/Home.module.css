@@ -151,14 +151,14 @@ aspect ratio of 2:1 (side areas)
   font-family: monospace;
   border: 4px var(--primary) solid;
   border-radius: 1rem 0 0 1rem;
-  flex-basis: 70%;
+  flex-basis: 75%;
   transition: border 0.5s;
 }
 
 .toggleSubmit {
   border: none;
   border-radius: 0 1rem 1rem 0;
-  flex-basis: 30%;
+  flex-basis: 25%;
   color: white;
 }
 
