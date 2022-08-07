@@ -221,7 +221,7 @@ export default function Home() {
     console.log("getting round from firebase")
     get(child(ref(database), `set`)).then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
+        // console.log(snapshot.val());
         setSetCount(snapshot.val());
       } else {
         console.log("No data available");
@@ -252,7 +252,10 @@ export default function Home() {
       let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
-      setSetCount((setCount) => { return setCount + 1; })
+      setSetCount((setCount) => {
+        set(ref(database, 'set/'), setCount + 1);
+        return setCount + 1;
+      })
     });
 
     channel.bind('restart-game', function(data) {
@@ -260,6 +263,7 @@ export default function Home() {
 
       rounds.current = [...rounds.current, value];
       setScore(0);
+      set(ref(database, 'set/'), 0);
       setSetCount(0);
     });
   }, [])
