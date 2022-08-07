@@ -109,7 +109,7 @@ aspect ratio of 2:1 (side areas)
   color: white;
 }
 
-.newGame, .nextSet, .toggleSubmit {
+.newGame, .nextSet, .toggleSubmit, .hovered {
   user-select: none;
   background-color: var(--primary);
   padding: 1rem;
@@ -120,6 +120,10 @@ aspect ratio of 2:1 (side areas)
 .newGame:hover, .nextSet:hover, .toggleSubmit:hover {
   background-color: black;
   transition: background-color 0.5s;
+}
+
+.hovered {
+  background-color: black;
 }
 
 .newGame {
@@ -151,14 +155,14 @@ aspect ratio of 2:1 (side areas)
   font-family: monospace;
   border: 4px var(--primary) solid;
   border-radius: 1rem 0 0 1rem;
-  flex-basis: 80%;
+  flex-basis: 75%;
   transition: border 0.5s;
 }
 
 .toggleSubmit {
   border: none;
   border-radius: 0 1rem 1rem 0;
-  flex-basis: 20%;
+  flex-basis: 25%;
   color: white;
 }
 

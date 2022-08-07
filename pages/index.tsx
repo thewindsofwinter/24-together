@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-import { get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
+import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -20,15 +20,23 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-export function getRandomCards(): CardType[] {
+export async function getRandomCards(): Promise<CardType[]> {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
+  let unsolvable = true;
   let fourCards = [] as CardType[];
 
-  for(var i = 0; i < 4; i++) {
-    fourCards.push({
-      suit: suits[Math.floor(Math.random() * 4)],
-      value: Math.ceil(Math.random() * 13)
-    });
+  while(unsolvable) {
+    fourCards = []
+    for(var i = 0; i < 4; i++) {
+      fourCards.push({
+        suit: suits[Math.floor(Math.random() * 4)],
+        value: Math.ceil(Math.random() * 13)
+      });
+    }
+
+    // console.log(fourCards)
+    unsolvable = await isUnsolvable(getCardsSorted(fourCards));
+    // console.log(unsolvable)
   }
 
   return fourCards;
@@ -86,8 +94,57 @@ export function verifyOperations(input: string, cards: CardType[]): string {
   }
 }
 
-export function updateCardDB() {
-  let newCards = getRandomCards();
+export function getCardsSorted(cards: CardType[]): number[] {
+  let numbers = [];
+  for (let index = 0; index < cards.length; index++) {
+    numbers.push(cards[index].value as number);
+  }
+  numbers.sort((a, b) => a - b);
+
+  console.log(numbers);
+
+  return numbers;
+}
+
+export async function isUnsolvable(sortedCards: number[]): Promise<boolean> {
+  let val = await fetch('unsolvable.txt')
+  .then(response => response.text())
+  .then(text => {
+    let str = text.split(/\r?\n/);
+    let foundMatch = false;
+    // console.log(str[0].split(" "));
+    str.forEach(element => {
+      let tokens = element.split(" ");
+      // console.log(tokens.length + " " + sortedCards.length)
+      let ok = true;
+      if(sortedCards.length != tokens.length) {
+        ok = false;
+      } else {
+        for(var i = 0; i < tokens.length; i++) {
+          // console.log("hi " + sortedCards[i] + " " + tokens[i])
+          if(sortedCards[i] != parseInt(tokens[i])) {
+            // console.log(i + " " + sortedCards[i] + " " + parseInt(tokens[i]))
+            ok = false;
+          }
+        }
+      }
+      // console.log(ok)
+
+      if(ok) {
+        // console.log(ok + " " + sortedCards + " " + tokens)
+        foundMatch = true;
+      }
+    });
+
+    return foundMatch;
+  })
+
+  return val;
+}
+
+export async function updateCardDB() {
+  let newCards = await getRandomCards();
+
   let wrappedCards = {
     first: newCards[0],
     second: newCards[1],
@@ -105,9 +162,9 @@ export function newGame(username: string) {
   let thisRound = {
     values: [],
     color: 2,
-    setCt: 0,
     message: "[INFO] " + username + " reset game",
-    query: ""
+    query: "",
+    label: "System Message"
   }
 
   fetch("/api/pusher-newround", {
@@ -125,9 +182,9 @@ export function nextRound(username: string) {
   let thisRound = {
     values: [],
     color: 2,
-    setCt: 0,
     message: "[INFO] " + username + " skipped the last round",
-    query: ""
+    query: "",
+    label: "System Message"
   }
 
   fetch("/api/pusher", {
@@ -142,23 +199,61 @@ export function nextRound(username: string) {
 
 
 export default function Home() {
-  const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
+  const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
-  const [setCount, setSetCount] = useState<number>(0);
+  const [setCount, setSetCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
+  const [submitToggle, setSubmitToggle] = useState<boolean>(false);
 
   // head off hydration problem
   useEffect(() => {
+    // Get the input field
+    var input = document.getElementById("input");
+
+    // Execute a function when the user presses a key on the keyboard
+    input.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        setSubmitToggle(true);
+        document.getElementById("submit").click();
+        setTimeout(function() { setSubmitToggle(false); }, 200);
+      }
+    });
+    
+    let suffix = String(new Date().getTime()).substr(-3)
+    // 0.7% chance
+    if(parseInt(suffix) > 992) {
+      suffix = "ket"
+    }
+    setUsername("birb-" + suffix)
+
     rounds.current = [{
       values: [],
       color: 2,
-      setCt: 0,
-      message: "[INFO] Welcome, " + username + "!",
-      query: ""
+      message: "[INFO] Welcome, birb-" + suffix + "!",
+      query: "",
+      label: "System Message"
     } as RoundInfo];
+
+    // Only need to do this at the start
+    console.log("getting round from firebase")
+    get(child(ref(database), `set`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        setSetCount(snapshot.val());
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
 
     console.log("getting cards from firebase");
 
@@ -181,7 +276,10 @@ export default function Home() {
       let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
-      setSetCount((setCount) => { return setCount + 1; })
+      setSetCount((setCount) => {
+        set(ref(database, 'set/'), setCount + 1);
+        return setCount + 1;
+      })
     });
 
     channel.bind('restart-game', function(data) {
@@ -189,7 +287,8 @@ export default function Home() {
 
       rounds.current = [...rounds.current, value];
       setScore(0);
-      setSetCount(0);
+      set(ref(database, 'set/'), 1);
+      setSetCount(1);
     });
   }, [])
 
@@ -246,7 +345,8 @@ export default function Home() {
             </div>
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
-              <button className={styles.toggleSubmit} onClick={() => {
+              <button className={submitToggle ? styles.hovered + ' ' + styles.toggleSubmit
+                : styles.toggleSubmit} id="submit" onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
 
                 let code = verifyOperations(input.value, cards).split('-');
@@ -254,7 +354,8 @@ export default function Home() {
                   values: cards,
                   color: 0,
                   message: "",
-                  query: "Query: \"" + input.value + "\" by " + username
+                  query: "Query: \"" + input.value + "\" by " + username,
+                  label: "Set #" + setCount
                 }
                 console.log(thisRound)
 
@@ -288,8 +389,8 @@ export default function Home() {
             <div className="text-xs w-[9/10] mx-auto" id="instructions">
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
-              parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
-              opponents to win the round!&nbsp;
+              parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be
+              solvable. Submit your answer before all your opponents to win the round!&nbsp;
               <a className={styles.hideButton} onClick={() =>
                 { document.getElementById("instructions").style.display = "none"; }
               }>[hide]</a>
@@ -307,15 +408,15 @@ export default function Home() {
                                values={round.values}
                                color={round.color}
                                message={round.message}
-                               setCt={round.setCt}
+                               label={round.label}
                                query={round.query}/>
               ))}
               <div className="mb-3"/>
             </div>
             <div className="flex flex-row border-2 rounded-br-xl">
-            <input className="flex-grow border-0  h-12 rounded-br-xl align-top outline-none p-1" id="input"></input>
-            <button className="outline-none bg-white rounded-br-xl ">
-              <img src="/right-arrow.svg" className="w-4 h-4 mr-1 "/>
+            <input className="flex-grow border-0 h-12 align-top outline-none p-1" id="input"></input>
+            <button className="outline-none bg-white rounded-br-xl">
+              <img src="/right-arrow.svg" className="w-4 h-4 mr-1"/>
             </button>
 
             </div>
