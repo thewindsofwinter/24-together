@@ -68,3 +68,10 @@ a {
     overflow-y: scroll;
   }
 }
+
+#hide {
+  position: absolute;
+  height: 0;
+  overflow: hidden;
+  white-space: pre;
+}

@@ -241,7 +241,10 @@ export default function Home() {
     txt.value = "birb-" + suffix;
 
     resize(hide, txt);
-    txt.addEventListener("input", resize(hide, txt));
+    txt.addEventListener("input", function() {
+      console.log("triggered");
+      resize(hide, txt);
+    });
 
     rounds.current = [{
       values: [],

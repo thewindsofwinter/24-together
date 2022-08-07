@@ -187,7 +187,7 @@ aspect ratio of 2:1 (side areas)
 }
 
 .usernameInput {
-  width: 80px;
+  width: 0;
   min-width: 0;
   background: none;
   border-bottom: 2px dotted var(--primary);
