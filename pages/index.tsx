@@ -27,7 +27,8 @@ export function getRandomCards(): CardType[] {
   for(var i = 0; i < 4; i++) {
     fourCards.push({
       suit: suits[Math.floor(Math.random() * 4)],
-      value: Math.ceil(Math.random() * 13)
+      // value: Math.ceil(Math.random() * 13)
+      value: 1,
     });
   }
 
@@ -86,8 +87,52 @@ export function verifyOperations(input: string, cards: CardType[]): string {
   }
 }
 
+export function getCardsSorted(cards: CardType[]): number[] {
+  let numbers = [];
+  for (let index = 0; index < cards.length; index++) {
+    numbers.push(cards[index].value as number);
+  }
+  numbers.sort((a, b) => a - b);
+
+  console.log(numbers);
+
+  return numbers;
+}
+
+export function isUnsolvable(sortedCards: number[]): boolean {
+  fetch('unsolvable.txt')
+  .then(response => response.text())
+  .then(text => {
+    let str = text.split(/\r?\n/);
+    // console.log(str[0].split(" "));
+    str.forEach(element => {
+      let tokens = element.split(" ");
+      let ok = true;
+      if(sortedCards.length != tokens.length) {
+        ok = false;
+      } else {
+        for(var i = 0; i < tokens.length; i++) {
+          if(sortedCards[i] != parseInt(tokens[i])) {
+            ok = false;
+          }
+        }
+      }
+
+      if(ok) {
+        return true;
+      }
+    });
+
+    return false;
+  })
+}
+
 export function updateCardDB() {
   let newCards = getRandomCards();
+  if(isUnsolvable(getCardsSorted(newCards))) {
+    console.log("unsolvable!");
+  }
+
   let wrappedCards = {
     first: newCards[0],
     second: newCards[1],
