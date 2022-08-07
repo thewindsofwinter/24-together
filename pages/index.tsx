@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
-import { get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
+import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -216,6 +216,20 @@ export default function Home() {
       query: "",
       label: "System Message"
     } as RoundInfo];
+
+    // Only need to do this at the start
+    console.log("getting round from firebase")
+    get(child(dbRef, `set`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+        setSetCount(snapshot.val());
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
 
     console.log("getting cards from firebase");
 
