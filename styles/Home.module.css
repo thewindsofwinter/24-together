@@ -26,14 +26,14 @@
 
 .title {
   width: 95vw;
-  max-width: 140vh;
+  max-width: 160vh;
   color: var(--title);
   font-family: "Encode Sans SC", sans-serif;
   text-transform: capitalize;
   font-size: min(7.5vh, 5rem);
   text-align:right;
   margin-top: 0;
-  margin-bottom: 2vh;
+  margin-bottom: 1vh;
 }
 
 /*
@@ -44,7 +44,7 @@ the bottom of the screen
 .wrapper {
   font-family: "Open Sans", sans-serif;
   width: 95vw;
-  max-width: 140vh;
+  max-width: 160vh;
   background-color: white;
   border-radius: 1rem;
   color: var(--primary);
@@ -63,7 +63,7 @@ aspect ratio of 2:1 (side areas)
 .wrapper:after {
   content: "";
   display: block;
-  padding-bottom: 50%;
+  padding-bottom: 48%;
 }
 
 .play {
@@ -101,7 +101,7 @@ aspect ratio of 2:1 (side areas)
   flex-basis: 1.5rem;
   flex-grow: 0;
   flex-shrink: 0;
-  font-size: 1.5rem;
+  font-size: 1rem;
 
   display:grid;
   grid-template-rows: auto;
@@ -122,8 +122,8 @@ aspect ratio of 2:1 (side areas)
   transition: background-color 0.5s;
 }
 
-.nextSet {
-  border-radius: 0 0 1rem 0;
+.newGame {
+  border-radius: 0 0 0 1rem;
 }
 
 .inputBar {

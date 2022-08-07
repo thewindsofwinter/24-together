@@ -139,6 +139,8 @@ export function nextRound(username: string) {
   });
 }
 
+
+
 export default function Home() {
   const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
   const [score, setScore] = useState<number>(0);
@@ -201,7 +203,28 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
         <div className={styles.wrapper}>
+
+          {/*player/chat*/}
+          <div className="basis-1/4 bg-accent rounded-l-2xl flex flex-col bg-green-50">
+            <div className="basis-8 grow-0 shrink-0 text-center font-black text-black text-2xl my-4 p-4">
+              Player List
+            </div>
+            <div className="basis-8 grow shrink overflow-auto space-y-8">
+
+            </div>
+            <div className={styles.controls}>
+              <div className={styles.newGame} onClick={() => { newGame(username); }}>
+                New Game
+              </div>
+              <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
+                Next Set
+              </div>
+            </div>
+          </div>
+
+
           <div className={styles.play}>
+
             <div className="basis-8">
               <button type="button"
                       className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
@@ -210,7 +233,7 @@ export default function Home() {
               </button>
 
 
-              <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-3xl font-bold">
+              <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-4xl font-bold">
                 Set {setCount}
               </div>
             </div>
@@ -273,11 +296,13 @@ export default function Home() {
               }>[hide]</a>
             </div>
           </div>
-          <div className="basis-1/4 bg-accent rounded-r-2xl flex flex-col">
-            <div className={styles.score}>
-              Score: {score} | Set #: {setCount}
+          {/*timer/history*/}
+          <div className="basis-1/4 bg-accent rounded-r-2xl flex flex-col bg-green-50">
+            <div className="basis-8 grow-0 shrink-0 text-center text-black text-3xl my-3 p-4">
+              <img className="w-8 h-8 inline-block mx-0.5 pb-0.5"  src="/timer-icon.svg" />
+              1:05
             </div>
-            <div className="basis-8 grow shrink overflow-auto space-y-2">
+            <div className="basis-8 grow shrink overflow-y-scroll space-y-8">
               {rounds.current.slice().reverse().map((round, index) => (
                   <HistoryInfo key={"history-" + index.toString()}
                                values={round.values}
@@ -286,14 +311,14 @@ export default function Home() {
                                label={round.label}
                                query={round.query}/>
               ))}
+              <div className="mb-3"/>
             </div>
-            <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { newGame(username); }}>
-                New Game
-              </div>
-              <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
-                Next Set
-              </div>
+            <div className="flex flex-row border-2 rounded-br-xl">
+            <input className="flex-grow border-0  h-12 rounded-br-xl align-top outline-none p-1" id="input"></input>
+            <button className="outline-none bg-white">
+              <img src="/right-arrow.svg" className="w-4 h-4 mr-1"/>
+            </button>
+
             </div>
           </div>
           </div>
