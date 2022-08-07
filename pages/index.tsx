@@ -105,9 +105,9 @@ export function newGame(username: string) {
   let thisRound = {
     values: [],
     color: 2,
-    setCt: 0,
     message: "[INFO] " + username + " reset game",
-    query: ""
+    query: "",
+    label: "System Message"
   }
 
   fetch("/api/pusher-newround", {
@@ -125,9 +125,9 @@ export function nextRound(username: string) {
   let thisRound = {
     values: [],
     color: 2,
-    setCt: 0,
     message: "[INFO] " + username + " skipped the last round",
-    query: ""
+    query: "",
+    label: "System Message"
   }
 
   fetch("/api/pusher", {
@@ -155,9 +155,9 @@ export default function Home() {
     rounds.current = [{
       values: [],
       color: 2,
-      setCt: 0,
       message: "[INFO] Welcome, " + username + "!",
-      query: ""
+      query: "",
+      label: "System Message"
     } as RoundInfo];
 
     console.log("getting cards from firebase");
@@ -254,7 +254,8 @@ export default function Home() {
                   values: cards,
                   color: 0,
                   message: "",
-                  query: "Query: \"" + input.value + "\" by " + username
+                  query: "Query: \"" + input.value + "\" by " + username,
+                  label: "Set #" + setCount
                 }
                 console.log(thisRound)
 
@@ -307,14 +308,14 @@ export default function Home() {
                                values={round.values}
                                color={round.color}
                                message={round.message}
-                               setCt={round.setCt}
+                               label={round.label}
                                query={round.query}/>
               ))}
               <div className="mb-3"/>
             </div>
             <div className="flex flex-row border-2 rounded-br-xl">
-            <input className="flex-grow border-0  h-12 rounded-br-xl align-top outline-none p-1" id="input"></input>
-            <button className="outline-none bg-white">
+            <input className="flex-grow border-0 h-12 align-top outline-none p-1" id="input"></input>
+            <button className="outline-none bg-white rounded-br-xl">
               <img src="/right-arrow.svg" className="w-4 h-4 mr-1"/>
             </button>
 
