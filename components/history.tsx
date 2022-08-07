@@ -6,7 +6,7 @@ export interface RoundInfo {
   color: number;
   message: string;
   query: string;
-  setCt: number;
+  label: string;
 }
 
 export default function HistoryInfo(props: RoundInfo) {
@@ -14,7 +14,7 @@ export default function HistoryInfo(props: RoundInfo) {
     case 0:
       return (
           <div className="bg-green-200 p-2 rounded-lg drop-shadow-md m-1">
-              <p className="font-bold text-xl text-green-900 m-1">Set #{props.setCt}</p>
+              <p className="font-bold text-xl text-green-900 m-1">{props.label}</p>
               <div className="flex flex-wrap w-full my-2">{props.values.map((card, index) => (
                   <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
               ))}</div>
@@ -26,7 +26,7 @@ export default function HistoryInfo(props: RoundInfo) {
     case 1:
       return (
           <div className="bg-red-200 p-2 rounded-lg drop-shadow-md m-1">
-              <p className="font-bold text-xl text-red-900 m-1">Set #{props.setCt}</p>
+              <p className="font-bold text-xl text-red-900 m-1">{props.label}</p>
               <div className="flex flex-wrap w-full my-2">{props.values.map((card, index) => (
                   <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
               ))}</div>
@@ -38,7 +38,7 @@ export default function HistoryInfo(props: RoundInfo) {
     default:
       return (
         <div className="bg-yellow-200 p-2 rounded-lg drop-shadow-md m-1">
-            <p className="font-bold text-xl text-yellow-900 m-1">Set #{props.setCt}</p>
+            <p className="font-bold text-xl text-yellow-900 m-1">{props.label}</p>
           <div className="flex flex-wrap w-full my-2">{props.values.map((card, index) => (
             <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={true}></Card>
           ))}</div>
