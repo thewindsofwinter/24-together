@@ -314,8 +314,8 @@ export default function Home() {
               <div className="mb-3"/>
             </div>
             <div className="flex flex-row border-2 rounded-br-xl">
-            <input className="flex-grow border-0  h-12 rounded-br-xl align-top outline-none p-1" id="input"></input>
-            <button className="outline-none bg-white">
+            <input className="flex-grow border-0 h-12 align-top outline-none p-1" id="input"></input>
+            <button className="outline-none bg-white rounded-br-xl">
               <img src="/right-arrow.svg" className="w-4 h-4 mr-1"/>
             </button>
 
