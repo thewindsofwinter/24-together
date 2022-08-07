@@ -201,7 +201,7 @@ export function nextRound(username: string) {
 export default function Home() {
   const [username, setUsername] = useState<string>("birb-" + String(new Date().getTime()).substr(-3));
   const [score, setScore] = useState<number>(0);
-  const [setCount, setSetCount] = useState<number>(0);
+  const [setCount, setSetCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
@@ -263,8 +263,8 @@ export default function Home() {
 
       rounds.current = [...rounds.current, value];
       setScore(0);
-      set(ref(database, 'set/'), 0);
-      setSetCount(0);
+      set(ref(database, 'set/'), 1);
+      setSetCount(1);
     });
   }, [])
 
