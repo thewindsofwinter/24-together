@@ -30,8 +30,7 @@ export async function getRandomCards(): CardType[] {
     for(var i = 0; i < 4; i++) {
       fourCards.push({
         suit: suits[Math.floor(Math.random() * 4)],
-        // value: Math.ceil(Math.random() * 13)
-        value: 1
+        value: Math.ceil(Math.random() * 13)
       });
     }
 
