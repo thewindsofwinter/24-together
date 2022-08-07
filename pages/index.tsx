@@ -346,8 +346,8 @@ export default function Home() {
             <div className="text-xs w-[9/10] mx-auto" id="instructions">
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
-              parentheses <code>[(, )]</code> which evaluates to 24. Submit your answer before all your
-              opponents to win the round!&nbsp;
+              parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be
+              solvable. Submit your answer before all your opponents to win the round!&nbsp;
               <a className={styles.hideButton} onClick={() =>
                 { document.getElementById("instructions").style.display = "none"; }
               }>[hide]</a>
