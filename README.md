@@ -1,34 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 24 Together
 
-## Getting Started
+This repo holds the code for [24 Together](https://24-together.vercel.app), a real-time multiplayer implementation of the [24 puzzle](https://en.wikipedia.org/wiki/24_(puzzle)), also known as 二十四点. The objective of this game is to be the first to find a sequence of arithmetic operators on the values of four given cards to make 24—a surprisingly engaging challenge that we maintainers spent hours playing as children. Unfortunately, current online implementations of this game are universally single-player, often have archaic user interfaces, and tend to be confined to the Sinosphere. We built this site to make sure that everyone can share the joy of playing this game with friends from anywhere.
 
-First, run the development server:
+## Technologies
 
-```bash
-npm run dev
-# or
-yarn dev
+This website was built on a serverless stack using [Next.js](https://nextjs.org/) on top of React for the front-end, [Firebase Realtime Database](https://firebase.google.com/docs/database) for persistent data storage, and [Pusher Channels](https://pusher.com/) for real-time chat and game history. We used [Tailwind](https://tailwindcss.com/) for most of our styling purposes, and [Vercel](https://vercel.app/) automatically deploys our app based on code changes.
+
+Our code is structured like a typical Next.js project with API routes. All API routes (`/api/pusher[suffix]`) are contained in the `pages/api` folder. The entry point to the app is in `pages/_app.tsx` which loads our main page, `index.tsx`. The `/components` folder contains functional subsections of the index page and `/styling` contains what CSS we haven't reduced to Tailwind yet. `/public` contains SVG images of playing cards and other static assets.
+
+To run a clone of this project, we suggest making your own Pusher instance and using your own Firebase. Set these environment values in either the deployment environment of your app or a `.env.local` file:
+
+```
+APP_ID = PUSHER APP ID
+API_KEY = PUSHER API KEY
+NEXT_PUBLIC_API_KEY = API KEY (AS ABOVE)
+SECRET = PUSHER SECRET
+NEXT_PUBLIC_CLUSTER = CLUSTER
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
+This project is actively under development, and we welcome collaborators! The easiest way to help is to raise an issue with bugs or improvements to this project. You can also play an active role in developing the project—we'd love help on implementing new features and improvements. The following is our current roadmap:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+**Sustainability**
+ - [ ] Clean up code
+ - [ ] Convert all CSS to Tailwind
+ - [ ] Make site mobile-friendly
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+**Minor Improvements**
+ - [ ] Add notifications for user join/leave
+ - [ ] List online players (presence channel)
+ - [ ] Add emotes in chat
+ - [ ] Make menu to navigate to instructions/about
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+**Major Changes**
+ - [ ] Implement rooms for players
+ - [ ] Create persistent system for accounts
+ - [ ] Set up leaderboards for times/scores
+ - [ ] Redesign UI completely
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Contact: resonance-stabilized@outlook.com
