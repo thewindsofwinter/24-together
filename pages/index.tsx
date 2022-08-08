@@ -25,28 +25,6 @@ const database = getDatabase(app);
 
 const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)]
 
-export async function getRandomCards(): Promise<CardType[]> {
-  const suits = ["spades", "hearts", "diamonds", "clubs"];
-  let unsolvable = true;
-  let fourCards = [] as CardType[];
-
-  while(unsolvable) {
-    fourCards = []
-    for(var i = 0; i < 4; i++) {
-      fourCards.push({
-        suit: suits[Math.floor(Math.random() * 4)],
-        value: Math.ceil(Math.random() * 13)
-      });
-    }
-
-    // console.log(fourCards)
-    unsolvable = await isUnsolvable(getCardsSorted(fourCards));
-    // console.log(unsolvable)
-  }
-
-  return fourCards;
-}
-
 export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("received " + input)
   for(var i = 0; i < input.length; i++) {
