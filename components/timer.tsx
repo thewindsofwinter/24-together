@@ -1,5 +1,5 @@
 import React from "react";
-import styles from '../styles/timer.module.css'
+import styles from '../styles/Timer.module.css'
 
 type Props = {
     time: number
