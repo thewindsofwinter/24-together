@@ -289,9 +289,9 @@ export default function Home() {
           {/*player/chat*/}
           <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50">
             <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
-              {chatCount} messages
+              Game Chat
             </div>
-            <div className="basis-8 grow shrink overflow-auto space-y-1">
+            <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2">
               {chatMsgs.current.map((chat, index) => (
                   <ChatMessage key={"message-" + index.toString()}
                                {...chat}/>
