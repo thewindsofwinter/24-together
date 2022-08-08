@@ -257,7 +257,7 @@ export default function Home() {
       console.log(messageData)
 
 
-      setChatMsgs((chatMsgs) => { [...chatMsgs, messageData] });
+      setChatMsgs((chatMsgs) => { return [...chatMsgs, messageData]; });
     });
 
     hist_channel.bind('restart-game', function(data) {
