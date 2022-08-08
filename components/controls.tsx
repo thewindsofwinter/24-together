@@ -1,5 +1,6 @@
 import styles from '../styles/Controls.module.css'
 import React, { useEffect, useState, useCallback, useRef } from 'react';
+import Card, { CardType } from '../components/card'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
