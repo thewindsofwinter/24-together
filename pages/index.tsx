@@ -292,7 +292,7 @@ export default function Home() {
               Game Chat
             </div>
             <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2">
-              {chatMsgs.current.map((chat, index) => (
+              {chatMsgs.map((chat, index) => (
                   <ChatMessage key={"message-" + index.toString()}
                                {...chat}/>
               ))}
