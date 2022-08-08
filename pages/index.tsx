@@ -202,9 +202,9 @@ export function sendChat(sender: string, content: string) {
     sender: sender,
 
   }
-  console.log("CHAT MESSAGE: " + chatMsg.msg);
+  console.log(JSON.stringify(chatMsg));
 
-  fetch("/api/pusher", {
+  fetch("/api/pusher-chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -222,11 +222,13 @@ export default function Home() {
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
+  const [chatCount, setChatCount] = useState<number>(0);
 
   // head off hydration problem
   useEffect(() => {
     // Get the input field
     var input = document.getElementById("input");
+    var chat = document.getElementById("chat");
 
     // Execute a function when the user presses a key on the keyboard
     input.addEventListener("keypress", function(event) {
@@ -238,6 +240,15 @@ export default function Home() {
         setSubmitToggle(true);
         document.getElementById("submit").click();
         setTimeout(function() { setSubmitToggle(false); }, 200);
+      }
+    });
+
+    chat.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        document.getElementById("send").click();
       }
     });
 
@@ -309,8 +320,9 @@ export default function Home() {
         label: "Chat"
       } as RoundInfo;
 
-      console.log(roundMessage)
-      // rounds.current = [...rounds.current, roundMessage];
+      // console.log(roundMessage)
+      rounds.current = [...rounds.current, roundMessage];
+      setChatCount((chatCount) => (chatCount + 1));
 
     });
 
@@ -340,7 +352,7 @@ export default function Home() {
           {/*player/chat*/}
           <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50">
             <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
-              Player List
+              {chatCount} messages
             </div>
             <div className="basis-8 grow shrink overflow-auto space-y-8">
 
@@ -350,10 +362,11 @@ export default function Home() {
             <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
               <span className="align-middle font-bold">{username}:</span></div>
             <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
-            <button className="outline-none bg-white min-w-fit" onClick={() => {
+            <button id = "send" className="outline-none bg-white min-w-fit" onClick={() => {
               let chat = document.getElementById("chat") as HTMLInputElement;
               //should prolly filter chat at some point xd
               sendChat(username, chat.value);
+              chat.value = "";
             }}>
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
             </button>
