@@ -137,7 +137,7 @@ export default function Home() {
     } as RoundInfo];
 
     // Only need to do this at the start
-    console.log("getting round from firebase")
+    console.log("getting round data from firebase")
     get(child(ref(database), `set`)).then((snapshot) => {
       if (snapshot.exists()) {
         // console.log(snapshot.val());
@@ -149,6 +149,16 @@ export default function Home() {
       console.error(error);
     });
 
+    get(child(ref(database), `attempt`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        setAttemptCount(snapshot.val());
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
 
     console.log("getting cards from firebase");
 
@@ -171,10 +181,25 @@ export default function Home() {
       let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
-      setSetCount((setCount) => {
-        set(ref(database, 'set/'), setCount + 1);
-        return setCount + 1;
-      })
+
+      // TODO: MAKE THIS LESS SHAKY, AS WE MIGHT SEND OTHER SYSTEM MESSAGES BESIDES SET
+      if(value.message === "Correct!" || value.label === "System Message") {
+        setSetCount((setCount) => {
+          set(ref(database, 'set/'), setCount + 1);
+          return setCount + 1;
+        })
+
+        setAttemptCount((attemptCount) => {
+          set(ref(database, 'attempt/'), 1);
+          return 1;
+        })
+      }
+      else {
+        setAttemptCount((attemptCount) => {
+          set(ref(database, 'attempt/'), setCount + 1);
+          return attemptCount + 1;
+        })
+      }
     });
 
     channel.bind('restart-game', function(data) {
@@ -184,6 +209,8 @@ export default function Home() {
       setScore(0);
       set(ref(database, 'set/'), 1);
       setSetCount(1);
+      set(ref(database, 'attempt/'), 1);
+      setAttemptCount(1);
     });
   }, [])
 
@@ -232,8 +259,8 @@ export default function Home() {
               </button>
 
 
-              <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-4xl font-bold">
-                Set {setCount}
+              <div className="p-4 pt-0 basis-8 grow-0 shrink-0 text-black text-center text-4xl font-bold">
+                Set {setCount}, Attempt {attemptCount}
               </div>
             </div>
             <div className="basis-4/5 grow">
@@ -242,6 +269,10 @@ export default function Home() {
                     <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
                 ))}
               </div>
+            </div>
+
+            <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-2xl font-bold">
+              {score} {score === 1 ? "point" : "points"}
             </div>
 
             <div className={styles.inputBar}>
@@ -256,12 +287,13 @@ export default function Home() {
                   color: 0,
                   message: "",
                   query: "Query: \"" + input.value + "\" by " + username,
-                  label: "Set #" + setCount
+                  label: "Set #" + setCount + ", Attempt " + attemptCount
                 }
                 console.log(thisRound)
 
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
+                  setScore(score + 1);
                   updateCardDB();
                 }
                 else if(code[0] == "incorrect") {
