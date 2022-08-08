@@ -76,7 +76,7 @@ export function verifyOperations(input: string, cards: CardType[]): string {
 
 export function resize(hide: HTMLElement, txt: HTMLInputElement) {
   hide.textContent = txt.value;
-  txt.style.width = hide.offsetWidth + "px";
+  txt.style.width = (hide.offsetWidth + 1) + "px";
 }
 
 export default function Home() {
