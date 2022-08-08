@@ -129,7 +129,7 @@ export default function Home() {
   const [attemptCount, setAttemptCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
-  let chatMsgs = useState<MessageInfo[]>([]);
+  const [chatMsgs, setChatMsgs] = useState<MessageInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
