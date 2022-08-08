@@ -196,9 +196,26 @@ export function nextRound(username: string) {
   });
 }
 
+export function sendChat(sender: string, content: string) {
+  let chatMsg = {
+    msg: content,
+    sender: sender,
+
+  }
+  console.log("CHAT MESSAGE: " + chatMsg.msg);
+
+  fetch("/api/pusher", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(chatMsg),
+  });
+}
+
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
-  const [score, setScore] = useState<number>(0);
+  const [, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
@@ -268,9 +285,9 @@ export default function Home() {
       cluster: process.env.NEXT_PUBLIC_CLUSTER,
     });
 
-    const channel = pusher.subscribe('history');
+    const hist_channel = pusher.subscribe('history');
 
-    channel.bind('send-history', function(data) {
+    hist_channel.bind('send-history', function(data) {
       let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
@@ -280,7 +297,24 @@ export default function Home() {
       })
     });
 
-    channel.bind('restart-game', function(data) {
+    hist_channel.bind('send-chat', function(data) {
+      let msg = data.msg as String;
+      let sender = data.sender as String;
+
+      let roundMessage = {
+        values: [],
+        color: 2,
+        message: sender + " says: " + msg,
+        query: "",
+        label: "Chat"
+      } as RoundInfo;
+
+      console.log(roundMessage)
+      // rounds.current = [...rounds.current, roundMessage];
+
+    });
+
+    hist_channel.bind('restart-game', function(data) {
       let value = data.notif as RoundInfo;
 
       rounds.current = [...rounds.current, value];
@@ -288,6 +322,8 @@ export default function Home() {
       set(ref(database, 'set/'), 1);
       setSetCount(1);
     });
+
+
   }, [])
 
   return (
@@ -313,10 +349,16 @@ export default function Home() {
             <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
             <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
               <span className="align-middle font-bold">{username}:</span></div>
-            <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="input"></input>
-            <button className="outline-none bg-white min-w-fit">
+            <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
+            <button className="outline-none bg-white min-w-fit" onClick={() => {
+              let chat = document.getElementById("chat") as HTMLInputElement;
+              //should prolly filter chat at some point xd
+              sendChat(username, chat.value);
+            }}>
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
             </button>
+
+
 
             </div>
           </div>
@@ -406,11 +448,7 @@ export default function Home() {
             <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
               {rounds.current.slice().reverse().map((round, index) => (
                   <HistoryInfo key={"history-" + index.toString()}
-                               values={round.values}
-                               color={round.color}
-                               message={round.message}
-                               label={round.label}
-                               query={round.query}/>
+                      {...round}/>
               ))}
               <div className="mb-3"/>
             </div>

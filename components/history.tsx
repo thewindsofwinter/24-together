@@ -10,6 +10,15 @@ export interface RoundInfo {
 }
 
 export default function HistoryInfo(props: RoundInfo) {
+    if (props.label == "Chat") {
+        return (
+            <div className="bg-green-200 p-2 rounded-lg drop-shadow-md m-1">
+                <p className="font-bold text-xl text-green-900 m-1">{props.label}</p>
+
+                <p className="text-green-500">{props.query}</p>
+                <p className="text-green-500">{props.message}</p>
+            </div>);
+    }
   switch(props.color) {
     case 0:
       return (
