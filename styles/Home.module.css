@@ -175,6 +175,7 @@ aspect ratio of 2:1 (side areas)
   min-width: 0;
   background: none;
   border-bottom: 2px dotted var(--primary);
+  margin-right: 1px;
 }
 
 .usernameInput:focus {

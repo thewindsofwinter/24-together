@@ -120,8 +120,12 @@ export default function Home() {
     resize(hide, txt);
     txt.addEventListener("input", function() {
       resize(hide, txt);
-      setUsername(txt.value)
     });
+
+    txt.addEventListener("blur", function() {
+      setUsername(txt.value);
+      // send message that username has changed
+    })
 
     rounds.current = [{
       values: [],
