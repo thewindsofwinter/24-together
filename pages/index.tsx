@@ -82,6 +82,7 @@ export default function Home() {
   const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(1);
+  const [attemptCount, setAttemptCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
   // Might make this a toggle button
