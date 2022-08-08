@@ -7,6 +7,7 @@ import Timer from '../components/timer'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 import Controls, { updateCardDB } from '../components/controls'
+import ChatMessage, { MessageInfo } from '../components/chat'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
@@ -21,6 +22,30 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
+
+const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)]
+
+export async function getRandomCards(): Promise<CardType[]> {
+  const suits = ["spades", "hearts", "diamonds", "clubs"];
+  let unsolvable = true;
+  let fourCards = [] as CardType[];
+
+  while(unsolvable) {
+    fourCards = []
+    for(var i = 0; i < 4; i++) {
+      fourCards.push({
+        suit: suits[Math.floor(Math.random() * 4)],
+        value: Math.ceil(Math.random() * 13)
+      });
+    }
+
+    // console.log(fourCards)
+    unsolvable = await isUnsolvable(getCardsSorted(fourCards));
+    // console.log(unsolvable)
+  }
+
+  return fourCards;
+}
 
 export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("received " + input)
@@ -79,6 +104,24 @@ export function resize(hide: HTMLElement, txt: HTMLInputElement) {
   txt.style.width = (hide.offsetWidth + 1) + "px";
 }
 
+export function sendChat(username: string, color: string, msg: string) {
+  let chatMsg = {
+    username: username,
+    color: color,
+    message: msg,
+
+  }
+  console.log("CHAT MESSAGE: " + chatMsg.message);
+
+  fetch("/api/pusher-chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(chatMsg),
+  });
+}
+
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
@@ -86,6 +129,7 @@ export default function Home() {
   const [attemptCount, setAttemptCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
+  let chatMsgs = useState<MessageInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
@@ -109,12 +153,11 @@ export default function Home() {
     };
   }, [reset]);
 
-
   // head off hydration problem
   useEffect(() => {
     // Get the input field
     var input = document.getElementById("input");
-
+    var chat = document.getElementById("chat");
     // Execute a function when the user presses a key on the keyboard
     input.addEventListener("keypress", function(event) {
       // If the user presses the "Enter" key on the keyboard
@@ -127,7 +170,14 @@ export default function Home() {
         setTimeout(function() { setSubmitToggle(false); }, 200);
       }
     });
-
+    chat.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        document.getElementById("send").click();
+      }
+    });
     let suffix = String(new Date().getTime()).substr(-3)
     // 0.7% chance
     if(parseInt(suffix) > 992) {
@@ -149,13 +199,12 @@ export default function Home() {
       // send message that username has changed
     })
 
-    rounds.current = [{
-      values: [],
-      color: 2,
-      message: "[INFO] Welcome, birb-" + suffix + "!",
-      query: "",
-      label: "System Message"
-    } as RoundInfo];
+    rounds.current = [];
+    setChatMsgs([{
+        username: "[INFO]",
+        color: "text-black",
+        message: "Welcome, birb-" + suffix + "!",
+      } as MessageInfo]);
 
     // Only need to do this at the start
     console.log("getting round data from firebase")
@@ -196,9 +245,9 @@ export default function Home() {
       cluster: process.env.NEXT_PUBLIC_CLUSTER,
     });
 
-    const channel = pusher.subscribe('history');
+    const hist_channel = pusher.subscribe('history');
 
-    channel.bind('send-history', function(data) {
+    hist_channel.bind('send-history', function(data) {
       let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
@@ -225,7 +274,15 @@ export default function Home() {
       }
     });
 
-    channel.bind('restart-game', function(data) {
+    hist_channel.bind('send-chat', function(data) {
+      let messageData = data as MessageInfo;
+      console.log(messageData)
+
+
+      setChatMsgs((chatMsgs) => { [...chatMsgs, messageData] });
+    });
+
+    hist_channel.bind('restart-game', function(data) {
       let value = data.notif as RoundInfo;
 
       rounds.current = [...rounds.current, value];
@@ -236,6 +293,8 @@ export default function Home() {
       set(ref(database, 'attempt/'), 1);
       setAttemptCount(1);
     });
+
+
   }, [])
 
   return (
@@ -252,10 +311,13 @@ export default function Home() {
           {/*player/chat*/}
           <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50">
             <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
-              Player List
+              {chatCount} messages
             </div>
-            <div className="basis-8 grow shrink overflow-auto space-y-8">
-
+            <div className="basis-8 grow shrink overflow-auto space-y-1">
+              {chatMsgs.current.map((chat, index) => (
+                  <ChatMessage key={"message-" + index.toString()}
+                               {...chat}/>
+              ))}
 
             </div>
             <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
@@ -266,9 +328,16 @@ export default function Home() {
               </span>
             </div>
             <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
-            <button className="outline-none bg-white min-w-fit">
+            <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
+              let chat = document.getElementById("chat") as HTMLInputElement;
+              //should prolly filter chat at some point xd
+              sendChat(username, chatColor, chat.value);
+              chat.value = "";
+            }}>
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
             </button>
+
+
 
             </div>
           </div>
@@ -362,11 +431,7 @@ export default function Home() {
             <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
               {rounds.current.slice().reverse().map((round, index) => (
                   <HistoryInfo key={"history-" + index.toString()}
-                               values={round.values}
-                               color={round.color}
-                               message={round.message}
-                               label={round.label}
-                               query={round.query}/>
+                      {...round}/>
               ))}
               <div className="mb-3"/>
             </div>
