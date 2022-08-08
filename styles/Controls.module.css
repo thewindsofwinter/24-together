@@ -1,0 +1,28 @@
+.controls {
+  flex-basis: 1.5rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-size: 1rem;
+
+  display:grid;
+  grid-template-rows: auto;
+  grid-template-columns: 50% 50%;
+  color: white;
+}
+
+.newGame, .nextSet {
+  user-select: none;
+  background-color: var(--primary);
+  padding: 1rem;
+  text-align: center;
+  transition: background-color 0.5s;
+}
+
+.newGame:hover, .nextSet:hover {
+  background-color: black;
+  transition: background-color 0.5s;
+}
+
+.nextSet {
+  border-radius: 0 0 1rem 0;
+}

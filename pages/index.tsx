@@ -3,8 +3,11 @@ import Pusher from 'pusher-js'
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
+import Timer from '../components/timer'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
+import Controls, { updateCardDB } from '../components/controls'
+import ChatMessage, { MessageInfo } from '../components/chat'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
@@ -20,27 +23,7 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-export async function getRandomCards(): Promise<CardType[]> {
-  const suits = ["spades", "hearts", "diamonds", "clubs"];
-  let unsolvable = true;
-  let fourCards = [] as CardType[];
-
-  while(unsolvable) {
-    fourCards = []
-    for(var i = 0; i < 4; i++) {
-      fourCards.push({
-        suit: suits[Math.floor(Math.random() * 4)],
-        value: Math.ceil(Math.random() * 13)
-      });
-    }
-
-    // console.log(fourCards)
-    unsolvable = await isUnsolvable(getCardsSorted(fourCards));
-    // console.log(unsolvable)
-  }
-
-  return fourCards;
-}
+const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)]
 
 export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("received " + input)
@@ -94,121 +77,103 @@ export function verifyOperations(input: string, cards: CardType[]): string {
   }
 }
 
-export function getCardsSorted(cards: CardType[]): number[] {
-  let numbers = [];
-  for (let index = 0; index < cards.length; index++) {
-    numbers.push(cards[index].value as number);
+export function resize(hide: HTMLElement, txt: HTMLInputElement) {
+  hide.textContent = txt.value;
+  txt.style.width = (hide.offsetWidth + 1) + "px";
+}
+
+export function sendChat(username: string, color: string, msg: string) {
+  let chatMsg = {
+    tag: username + ":",
+    color: color,
+    message: msg,
+
   }
-  numbers.sort((a, b) => a - b);
+  console.log("CHAT MESSAGE: " + chatMsg.message);
 
-  console.log(numbers);
-
-  return numbers;
-}
-
-export async function isUnsolvable(sortedCards: number[]): Promise<boolean> {
-  let val = await fetch('unsolvable.txt')
-  .then(response => response.text())
-  .then(text => {
-    let str = text.split(/\r?\n/);
-    let foundMatch = false;
-    // console.log(str[0].split(" "));
-    str.forEach(element => {
-      let tokens = element.split(" ");
-      // console.log(tokens.length + " " + sortedCards.length)
-      let ok = true;
-      if(sortedCards.length != tokens.length) {
-        ok = false;
-      } else {
-        for(var i = 0; i < tokens.length; i++) {
-          // console.log("hi " + sortedCards[i] + " " + tokens[i])
-          if(sortedCards[i] != parseInt(tokens[i])) {
-            // console.log(i + " " + sortedCards[i] + " " + parseInt(tokens[i]))
-            ok = false;
-          }
-        }
-      }
-      // console.log(ok)
-
-      if(ok) {
-        // console.log(ok + " " + sortedCards + " " + tokens)
-        foundMatch = true;
-      }
-    });
-
-    return foundMatch;
-  })
-
-  return val;
-}
-
-export async function updateCardDB() {
-  let newCards = await getRandomCards();
-
-  let wrappedCards = {
-    first: newCards[0],
-    second: newCards[1],
-    third: newCards[2],
-    fourth: newCards[3]
-  };
-
-  console.log(wrappedCards);
-  set(ref(database, 'cards/'), wrappedCards);
-}
-
-export function newGame(username: string) {
-  updateCardDB();
-
-  let thisRound = {
-    values: [],
-    color: 2,
-    message: "[INFO] " + username + " reset game",
-    query: "",
-    label: "System Message"
-  }
-
-  fetch("/api/pusher-newround", {
+  fetch("/api/pusher-chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(thisRound),
+    body: JSON.stringify(chatMsg),
   });
 }
 
-export function nextRound(username: string) {
-  updateCardDB();
+export function sendUsernameChange(oldUsername: string, color: string, newUsername: string) {
+  let chatMsg = {
+    tag: oldUsername,
+    color: color,
+    message: "set their username to \'" + newUsername + "\'",
 
-  let thisRound = {
-    values: [],
-    color: 2,
-    message: "[INFO] " + username + " skipped the last round",
-    query: "",
-    label: "System Message"
   }
+  console.log("CHAT MESSAGE: " + chatMsg.message);
 
-  fetch("/api/pusher", {
+  fetch("/api/pusher-chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(thisRound),
+    body: JSON.stringify(chatMsg),
   });
 }
-
-
 
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(1);
+  const [attemptCount, setAttemptCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
+  const [chatMsgs, setChatMsgs] = useState<MessageInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
+  const [submitToggle, setSubmitToggle] = useState<boolean>(false);
+  const [time, setTime] = useState(0);
+  const [reset, setReset] = useState(false);
+
+  useEffect(() => {
+    let interval = null;
+    if (!reset) {
+      interval = setInterval(() => {
+        setTime((time) => time + 10);
+      }, 10);
+    } else {
+      clearInterval(interval);
+      setTime(0);
+      setReset(false);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [reset]);
 
   // head off hydration problem
   useEffect(() => {
+    // Get the input field
+    var input = document.getElementById("input");
+    var chat = document.getElementById("chat");
+    // Execute a function when the user presses a key on the keyboard
+    input.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        setSubmitToggle(true);
+        document.getElementById("submit").click();
+        setTimeout(function() { setSubmitToggle(false); }, 200);
+      }
+    });
+    chat.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        document.getElementById("send").click();
+      }
+    });
     let suffix = String(new Date().getTime()).substr(-3)
     // 0.7% chance
     if(parseInt(suffix) > 992) {
@@ -216,16 +181,32 @@ export default function Home() {
     }
     setUsername("birb-" + suffix)
 
-    rounds.current = [{
-      values: [],
-      color: 2,
-      message: "[INFO] Welcome, birb-" + suffix + "!",
-      query: "",
-      label: "System Message"
-    } as RoundInfo];
+    const hide = document.getElementById('hide') as HTMLElement;
+    const txt = document.getElementById('txt') as HTMLInputElement;
+    txt.value = "birb-" + suffix;
+
+    resize(hide, txt);
+    txt.addEventListener("input", function() {
+      resize(hide, txt);
+    });
+
+    txt.addEventListener("blur", function() {
+      setUsername((username) => {
+        sendUsernameChange(username, chatColor, txt.value);
+        return txt.value;
+      });
+      // send message that username has changed
+    })
+
+    rounds.current = [];
+    setChatMsgs([{
+        tag: "[INFO]",
+        color: "text-black",
+        message: "Welcome, birb-" + suffix + "!",
+      } as MessageInfo]);
 
     // Only need to do this at the start
-    console.log("getting round from firebase")
+    console.log("getting round data from firebase")
     get(child(ref(database), `set`)).then((snapshot) => {
       if (snapshot.exists()) {
         // console.log(snapshot.val());
@@ -237,6 +218,16 @@ export default function Home() {
       console.error(error);
     });
 
+    get(child(ref(database), `attempt`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        // console.log(snapshot.val());
+        setAttemptCount(snapshot.val());
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
 
     console.log("getting cards from firebase");
 
@@ -253,26 +244,56 @@ export default function Home() {
       cluster: process.env.NEXT_PUBLIC_CLUSTER,
     });
 
-    const channel = pusher.subscribe('history');
+    const hist_channel = pusher.subscribe('history');
 
-    channel.bind('send-history', function(data) {
+    hist_channel.bind('send-history', function(data) {
       let value = data.history as RoundInfo;
 
       rounds.current = [...rounds.current, value];
-      setSetCount((setCount) => {
-        set(ref(database, 'set/'), setCount + 1);
-        return setCount + 1;
-      })
+
+      // TODO: MAKE THIS LESS SHAKY, AS WE MIGHT SEND OTHER SYSTEM MESSAGES BESIDES SET
+      if(value.message === "Correct!" || value.label === "System Message") {
+        setSetCount((setCount) => {
+          set(ref(database, 'set/'), setCount + 1);
+          return setCount + 1;
+        })
+
+        setReset(true);
+
+        setAttemptCount((attemptCount) => {
+          set(ref(database, 'attempt/'), 1);
+          return 1;
+        })
+      }
+      else {
+        setAttemptCount((attemptCount) => {
+          set(ref(database, 'attempt/'), setCount + 1);
+          return attemptCount + 1;
+        })
+      }
     });
 
-    channel.bind('restart-game', function(data) {
+    hist_channel.bind('send-chat', function(data) {
+      let messageData = data as MessageInfo;
+      console.log(messageData)
+
+
+      setChatMsgs((chatMsgs) => { return [...chatMsgs, messageData]; });
+    });
+
+    hist_channel.bind('restart-game', function(data) {
       let value = data.notif as RoundInfo;
 
       rounds.current = [...rounds.current, value];
       setScore(0);
+      setReset(true);
       set(ref(database, 'set/'), 1);
       setSetCount(1);
+      set(ref(database, 'attempt/'), 1);
+      setAttemptCount(1);
     });
+
+
   }, [])
 
   return (
@@ -287,48 +308,69 @@ export default function Home() {
         <div className={styles.wrapper}>
 
           {/*player/chat*/}
-          <div className="basis-1/4 bg-accent rounded-l-2xl flex flex-col bg-green-50">
-            <div className="basis-8 grow-0 shrink-0 text-center font-black text-black text-2xl my-4 p-4">
-              Player List
+          <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50">
+            <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
+              Game Chat
             </div>
-            <div className="basis-8 grow shrink overflow-auto space-y-8">
+            <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2">
+              {chatMsgs.map((chat, index) => (
+                  <ChatMessage key={"message-" + index.toString()}
+                               {...chat}/>
+              ))}
 
             </div>
-            <div className={styles.controls}>
-              <div className={styles.newGame} onClick={() => { newGame(username); }}>
-                New Game
-              </div>
-              <div className={styles.nextSet} onClick={() => { nextRound(username); }}>
-                Next Set
-              </div>
+            <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
+            <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
+              <span className="font-bold">
+                <span id="hide"></span>
+                <input id="txt" className={styles.usernameInput}></input>:
+              </span>
+            </div>
+            <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
+            <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
+              let chat = document.getElementById("chat") as HTMLInputElement;
+              //should prolly filter chat at some point xd
+              sendChat(username, chatColor, chat.value);
+              chat.value = "";
+            }}>
+              <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
+            </button>
+
+
+
             </div>
           </div>
 
 
-          <div className={styles.play}>
-
+          <div className="basis-3/5 p-4 flex flex-col">
             <div className="basis-8">
               <button type="button"
                       className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
                  <img className="w-5 h-5" src="/arrow-icon.svg" />
-                <span className="sr-only">Icon description</span>
+                <span className="sr-only">Information Button</span>
               </button>
 
 
-              <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-4xl font-bold">
-                Set {setCount}
+              <div className="p-4 pt-0 basis-8 grow-0 shrink-0 text-black text-center text-4xl font-bold">
+                Set {setCount}, Attempt {attemptCount}
               </div>
             </div>
-            <div className="basis-4/5 grow ">
+            <div className="basis-4/5 grow">
               <div className="flex flex-wrap -mb-4 -mx-2 w-full">
                 {cards.map((card, index) => (
                     <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
                 ))}
               </div>
             </div>
+
+            <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-2xl font-bold">
+              {score} {score === 1 ? "point" : "points"}
+            </div>
+
             <div className={styles.inputBar}>
               <input className={styles.input} id="input"></input>
-              <button className={styles.toggleSubmit} onClick={() => {
+              <button className={submitToggle ? styles.hovered + ' ' + styles.toggleSubmit
+                : styles.toggleSubmit} id="submit" onClick={() => {
                 let input = document.getElementById("input") as HTMLInputElement;
 
                 let code = verifyOperations(input.value, cards).split('-');
@@ -336,13 +378,15 @@ export default function Home() {
                   values: cards,
                   color: 0,
                   message: "",
-                  query: "Query: \"" + input.value + "\" by " + username,
-                  label: "Set #" + setCount
+                  query: "Query: \"" + input.value + "\" by " + username
+                  + " after " + (time - time%10)/1000 + " seconds",
+                  label: "Set #" + setCount + ", Attempt " + attemptCount
                 }
                 console.log(thisRound)
 
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
+                  setScore(score + 1);
                   updateCardDB();
                 }
                 else if(code[0] == "incorrect") {
@@ -368,7 +412,7 @@ export default function Home() {
               }}>{submitText}</button>
             </div>
 
-            <div className="text-xs w-[9/10] mx-auto" id="instructions">
+            <div className="text-xs basis-8 mx-auto mt-2" id="instructions">
               <strong>Instructions:</strong> For each round, enter the point values of all four cards
               with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
               parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be
@@ -379,29 +423,19 @@ export default function Home() {
             </div>
           </div>
           {/*timer/history*/}
-          <div className="basis-1/4 bg-accent rounded-r-2xl flex flex-col bg-green-50">
-            <div className="basis-8 grow-0 shrink-0 text-center text-black text-3xl my-3 p-4">
-              <img className="w-8 h-8 inline-block mx-0.5 pb-0.5"  src="/timer-icon.svg" />
-              1:05
+          <div className="basis-1/5 bg-accent rounded-r-2xl flex flex-col bg-green-50">
+            <div className="basis-8 grow-0 shrink-0 text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-tr-2xl">
+              <Timer time={time} />
             </div>
-            <div className="basis-8 grow shrink overflow-y-scroll space-y-8">
+            <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
               {rounds.current.slice().reverse().map((round, index) => (
                   <HistoryInfo key={"history-" + index.toString()}
-                               values={round.values}
-                               color={round.color}
-                               message={round.message}
-                               label={round.label}
-                               query={round.query}/>
+                      {...round}/>
               ))}
               <div className="mb-3"/>
             </div>
-            <div className="flex flex-row border-2 rounded-br-xl">
-            <input className="flex-grow border-0 h-12 align-top outline-none p-1" id="input"></input>
-            <button className="outline-none bg-white rounded-br-xl">
-              <img src="/right-arrow.svg" className="w-4 h-4 mr-1"/>
-            </button>
 
-            </div>
+            <Controls username={username} />
           </div>
           </div>
         </main>
