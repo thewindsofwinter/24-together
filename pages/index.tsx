@@ -3,6 +3,7 @@ import Pusher from 'pusher-js'
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
+import Timer from '../components/timer'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 import Controls, { updateCardDB } from '../components/controls'
