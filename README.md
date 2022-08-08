@@ -1,12 +1,14 @@
 # 24 Together
 
-This repo holds the code for [24 Together](https://24-together.vercel.app), a real-time multiplayer implementation of the [24 puzzle](https://en.wikipedia.org/wiki/24_(puzzle)), also known as 二十四点. The objective of this game is to be the first to find a sequence of arithmetic operators on the values of four given cards to make 24—a surprisingly engaging challenge that we maintainers spent hours playing as children. Unfortunately, current online implementations of this game are universally single-player, often have archaic user interfaces, and tend to be confined to the Sinosphere. We built this site to make sure that everyone can share the joy of playing this game with friends from anywhere.
+This repo holds the code for [24 Together](https://24-together.vercel.app), a real-time multiplayer implementation of the [24 puzzle](https://en.wikipedia.org/wiki/24_(puzzle)), also known as 二十四点. The objective of this game is to be the first to find a sequence of arithmetic operators on the values of four given cards to make 24—a surprisingly engaging challenge that we maintainers spent hours playing as children. 
+
+Unfortunately, current online implementations of this game are universally single-player, often have archaic user interfaces, and tend to be confined to the Sinosphere. We built this site to make sure that everyone can share the joy of playing this game with friends from anywhere.
 
 ## Technologies
 
 This website was built on a serverless stack using [Next.js](https://nextjs.org/) on top of React for the front-end, [Firebase Realtime Database](https://firebase.google.com/docs/database) for persistent data storage, and [Pusher Channels](https://pusher.com/) for real-time chat and game history. We used [Tailwind](https://tailwindcss.com/) for most of our styling purposes, and [Vercel](https://vercel.app/) automatically deploys our app based on code changes.
 
-Our code is structured like a typical Next.js project with API routes. All API routes (`/api/pusher[suffix]`) are contained in the `pages/api` folder. The entry point to the app is in `pages/_app.tsx` which loads our main page, `index.tsx`. The `/components` folder contains functional subsections of the index page and `/styling` contains what CSS we haven't reduced to Tailwind yet. `/public` contains SVG images of playing cards and other static assets.
+Our code is structured like a typical Next.js project with API routes. The entry point to our app is in `pages/index.tsx` All API routes (of the form `/api/pusher[suffix]`) are contained in the `pages/api` subfolder. The `/components` folder contains functional subsections of the index page, and `/styling` contains what CSS we haven't reduced to Tailwind yet. `/public` contains SVG images of playing cards and other static assets.
 
 To run a clone of this project, we suggest making your own Pusher instance and using your own Firebase. Set these environment values in either the deployment environment of your app or a `.env.local` file:
 
