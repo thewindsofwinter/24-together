@@ -2,7 +2,7 @@ import React from "react";
 import styles from '../styles/timer.module.css'
 
 type Props = {
-    timer: number
+    time: number
 }
 
 export default function Timer(props: Props) {
