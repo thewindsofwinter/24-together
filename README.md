@@ -1,4 +1,4 @@
-# 24 Together
+# ![24 Together Logo](header.png)
 
 This repo holds the code for [24 Together](https://24-together.vercel.app), a real-time multiplayer implementation of the [24 puzzle](https://en.wikipedia.org/wiki/24_(puzzle)), also known as 二十四点. The objective of this game is to be the first to find a sequence of arithmetic operators on the values of four given cards to make 24—a surprisingly engaging challenge that we maintainers spent hours playing as children. 
 
