@@ -140,7 +140,11 @@ export function nextRound(username: string) {
   });
 }
 
-export default function Controls(props: string) {
+type Props = {
+    username: string
+}
+
+export default function Controls(props: Props) {
   return (
     <div className={styles.controls}>
       <div className={styles.newGame} onClick={() => { newGame(props.username); }}>

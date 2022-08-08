@@ -1,6 +1,10 @@
 import React from "react";
 import styles from '../styles/timer.module.css'
 
+type Props = {
+    timer: number
+}
+
 export default function Timer(props: number) {
   return (
     <div className={styles.timer}>
