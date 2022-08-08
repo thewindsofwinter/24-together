@@ -1,0 +1,15 @@
+.timer{
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.digits{
+    font-size: 2rem;
+    color: #f5f5f5;
+}
+
+.millisec{
+    color:  #e42a2a;
+}
