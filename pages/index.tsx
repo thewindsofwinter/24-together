@@ -137,11 +137,11 @@ export default function Home() {
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
   const [time, setTime] = useState(0);
   const [reset, setReset] = useState(false);
-  const AlwaysScrollToBottom = () => {
-    const elementRef = useRef();
-    useEffect(() => elementRef.current.scrollIntoView());
-    return <div ref={elementRef} />;
+  const scrollBottomRef = useRef(null);
+  const scrollToBottom = () => {
+    scrollBottomRef.current.scrollIntoView({ behavior: "smooth" });
   };
+  useEffect(scrollToBottom, [chatMsgs]);
   useEffect(() => {
     let interval = null;
     if (!reset) {
@@ -285,10 +285,13 @@ export default function Home() {
 
     hist_channel.bind('send-chat', function(data) {
       let messageData = data as MessageInfo;
-      console.log(messageData)
+      console.log(messageData);
 
 
-      setChatMsgs((chatMsgs) => { return [...chatMsgs, messageData]; });
+      setChatMsgs((chatMsgs) => {
+
+        return [...chatMsgs, messageData]; });
+
     });
 
     hist_channel.bind('restart-game', function(data) {
@@ -327,7 +330,7 @@ export default function Home() {
                   <ChatMessage key={"message-" + index.toString()}
                                {...chat}/>
               ))}
-              <AlwaysScrollToBottom />
+              <div id="scroll-to-bottom" className="float-left clear-both" ref={scrollBottomRef}/>
             </div>
             <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
             <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
