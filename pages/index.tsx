@@ -84,9 +84,27 @@ export function resize(hide: HTMLElement, txt: HTMLInputElement) {
 
 export function sendChat(username: string, color: string, msg: string) {
   let chatMsg = {
-    username: username,
+    tag: username + ":",
     color: color,
     message: msg,
+
+  }
+  console.log("CHAT MESSAGE: " + chatMsg.message);
+
+  fetch("/api/pusher-chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(chatMsg),
+  });
+}
+
+export function sendUsernameChange(oldUsername: string, color: string, newUsername: string) {
+  let chatMsg = {
+    tag: oldUsername,
+    color: color,
+    message: "set their username to \'" + newUsername + "\'",
 
   }
   console.log("CHAT MESSAGE: " + chatMsg.message);
@@ -173,13 +191,16 @@ export default function Home() {
     });
 
     txt.addEventListener("blur", function() {
-      setUsername(txt.value);
+      setUsername((username) => {
+        sendUsernameChange(username, chatColor, txt.value);
+        return txt.value;
+      });
       // send message that username has changed
     })
 
     rounds.current = [];
     setChatMsgs([{
-        username: "[INFO]",
+        tag: "[INFO]",
         color: "text-black",
         message: "Welcome, birb-" + suffix + "!",
       } as MessageInfo]);
