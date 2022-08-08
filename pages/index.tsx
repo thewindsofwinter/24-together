@@ -5,6 +5,7 @@ import styles from '../styles/Home.module.css'
 import mexp from 'math-expression-evaluator'
 import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
+import ChatMessage, { MessageInfo } from '../components/chat'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
@@ -19,6 +20,8 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
+
+const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)]
 
 export async function getRandomCards(): Promise<CardType[]> {
   const suits = ["spades", "hearts", "diamonds", "clubs"];
@@ -196,15 +199,16 @@ export function nextRound(username: string) {
   });
 }
 
-export function sendChat(sender: string, content: string) {
+export function sendChat(username: string, color: string, msg: string) {
   let chatMsg = {
-    msg: content,
-    sender: sender,
+    username: username,
+    color: color,
+    message: msg,
 
   }
-  console.log("CHAT MESSAGE: " + chatMsg.msg);
+  console.log("CHAT MESSAGE: " + chatMsg.message);
 
-  fetch("/api/pusher", {
+  fetch("/api/pusher-chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -215,19 +219,21 @@ export function sendChat(sender: string, content: string) {
 
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
-  const [, setScore] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
   const [setCount, setSetCount] = useState<number>(1);
   const [cards, setCards] = useState<CardType[]>([]);
   const rounds = useRef<RoundInfo[]>([]);
+  let chatMsgs = useRef<MessageInfo[]>([]);
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
+  const [chatCount, setChatCount] = useState<number>(0);
 
   // head off hydration problem
   useEffect(() => {
     // Get the input field
     var input = document.getElementById("input");
-
+    var chat = document.getElementById("chat");
     // Execute a function when the user presses a key on the keyboard
     input.addEventListener("keypress", function(event) {
       // If the user presses the "Enter" key on the keyboard
@@ -240,7 +246,14 @@ export default function Home() {
         setTimeout(function() { setSubmitToggle(false); }, 200);
       }
     });
-
+    chat.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        document.getElementById("send").click();
+      }
+    });
     let suffix = String(new Date().getTime()).substr(-3)
     // 0.7% chance
     if(parseInt(suffix) > 992) {
@@ -248,13 +261,13 @@ export default function Home() {
     }
     setUsername("birb-" + suffix)
 
-    rounds.current = [{
-      values: [],
-      color: 2,
-      message: "[INFO] Welcome, birb-" + suffix + "!",
-      query: "",
-      label: "System Message"
-    } as RoundInfo];
+    rounds.current = [];
+    chatMsgs.current = [
+      {username: "[INFO]",
+        color: "text-black",
+        message: "Welcome, birb-" + suffix + "!",
+      } as MessageInfo
+    ];
 
     // Only need to do this at the start
     console.log("getting round from firebase")
@@ -298,19 +311,12 @@ export default function Home() {
     });
 
     hist_channel.bind('send-chat', function(data) {
-      let msg = data.msg as String;
-      let sender = data.sender as String;
+      let messageData = data as MessageInfo;
+      console.log(messageData)
 
-      let roundMessage = {
-        values: [],
-        color: 2,
-        message: sender + " says: " + msg,
-        query: "",
-        label: "Chat"
-      } as RoundInfo;
 
-      console.log(roundMessage)
-      // rounds.current = [...rounds.current, roundMessage];
+      chatMsgs.current = [...chatMsgs.current, messageData];
+      setChatCount((chatCount) => (chatCount + 1));
 
     });
 
@@ -340,20 +346,24 @@ export default function Home() {
           {/*player/chat*/}
           <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50">
             <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
-              Player List
+              {chatCount} messages
             </div>
-            <div className="basis-8 grow shrink overflow-auto space-y-8">
-
+            <div className="basis-8 grow shrink overflow-auto space-y-1">
+              {chatMsgs.current.map((chat, index) => (
+                  <ChatMessage key={"message-" + index.toString()}
+                               {...chat}/>
+              ))}
 
             </div>
             <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
             <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
-              <span className="align-middle font-bold">{username}:</span></div>
+              <span className={`align-middle font-bold ${chatColor}`}>{username}:</span></div>
             <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
-            <button className="outline-none bg-white min-w-fit" onClick={() => {
+            <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
               let chat = document.getElementById("chat") as HTMLInputElement;
               //should prolly filter chat at some point xd
-              sendChat(username, chat.value);
+              sendChat(username, chatColor, chat.value);
+              chat.value = "";
             }}>
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
             </button>

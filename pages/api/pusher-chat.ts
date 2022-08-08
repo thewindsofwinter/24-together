@@ -9,11 +9,12 @@ export const pusher = new Pusher({
 });
 
 export default async function handler(req, res) {
-    const { msg, sender } = req.body;
+    const { username, color, message } = req.body;
 
     const response = await pusher.trigger("history", "send-chat", {
-        msg,
-        sender,
+        username,
+        color,
+        message,
     });
 
 
