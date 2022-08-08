@@ -88,6 +88,19 @@ export default function Home() {
   // Might make this a toggle button
   const [submitText, setSubmitText] = useState<string>("I found 24!");
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    let interval = null;
+    interval = setInterval(() => {
+      setTime((time) => time + 10);
+    }, 10);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
 
   // head off hydration problem
   useEffect(() => {
@@ -333,7 +346,7 @@ export default function Home() {
           <div className="basis-1/5 bg-accent rounded-r-2xl flex flex-col bg-green-50">
             <div className="basis-8 grow-0 shrink-0 text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-tr-2xl">
               <img className="w-8 h-8 inline-block mx-0.5 pb-0.5" src="/timer-icon.svg" />
-              1:05
+              <Timer time={time} />
             </div>
             <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
               {rounds.current.slice().reverse().map((round, index) => (
