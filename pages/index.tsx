@@ -223,12 +223,11 @@ export default function Home() {
 
 
           <div className="basis-3/5 p-4 flex flex-col">
-
             <div className="basis-8">
               <button type="button"
                       className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
                  <img className="w-5 h-5" src="/arrow-icon.svg" />
-                <span className="sr-only">Icon description</span>
+                <span className="sr-only">Information Button</span>
               </button>
 
 
