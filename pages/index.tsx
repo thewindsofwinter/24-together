@@ -90,17 +90,24 @@ export default function Home() {
   const [submitText, setSubmitText] = useState<string>("I found 24!");
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
   const [time, setTime] = useState(0);
+  const [reset, setReset] = useState(false);
 
   useEffect(() => {
     let interval = null;
-    interval = setInterval(() => {
-      setTime((time) => time + 10);
-    }, 10);
+    if (!reset) {
+      interval = setInterval(() => {
+        setTime((time) => time + 10);
+      }, 10);
+    } else {
+      clearInterval(interval);
+      setTime(0);
+      setReset(false);
+    }
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [reset]);
 
 
   // head off hydration problem
@@ -203,6 +210,8 @@ export default function Home() {
           return setCount + 1;
         })
 
+        setReset(true);
+
         setAttemptCount((attemptCount) => {
           set(ref(database, 'attempt/'), 1);
           return 1;
@@ -221,6 +230,7 @@ export default function Home() {
 
       rounds.current = [...rounds.current, value];
       setScore(0);
+      setReset(true);
       set(ref(database, 'set/'), 1);
       setSetCount(1);
       set(ref(database, 'attempt/'), 1);
@@ -300,7 +310,8 @@ export default function Home() {
                   values: cards,
                   color: 0,
                   message: "",
-                  query: "Query: \"" + input.value + "\" by " + username,
+                  query: "Query: \"" + input.value + "\" by " + username
+                  + " after " + (time - time%10)/1000 + " seconds",
                   label: "Set #" + setCount + ", Attempt " + attemptCount
                 }
                 console.log(thisRound)
@@ -346,7 +357,6 @@ export default function Home() {
           {/*timer/history*/}
           <div className="basis-1/5 bg-accent rounded-r-2xl flex flex-col bg-green-50">
             <div className="basis-8 grow-0 shrink-0 text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-tr-2xl">
-              <img className="w-8 h-8 inline-block mx-0.5 pb-0.5" src="/timer-icon.svg" />
               <Timer time={time} />
             </div>
             <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
