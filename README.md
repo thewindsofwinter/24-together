@@ -1,5 +1,7 @@
 # ![24 Together Logo](header.png)
 
+![Vercel](https://vercelbadge.vercel.app/api/thewindsofwinter/24-together) ![Known Vulnerabilities](https://snyk.io/test/github/thewindsofwinter/24-together/badge.svg)
+
 This repo holds the code for [24 Together](https://24-together.vercel.app), a real-time multiplayer implementation of the [24 puzzle](https://en.wikipedia.org/wiki/24_(puzzle)), also known as 二十四点. The objective of this game is to be the first to find a sequence of arithmetic operators on the values of four given cards to make 24—a surprisingly engaging challenge that we maintainers spent hours playing as children. 
 
 Unfortunately, current online implementations of this game are universally single-player, often have archaic user interfaces, and tend to be confined to the Sinosphere. We built this site to make sure that everyone can share the joy of playing this game with friends from anywhere.
