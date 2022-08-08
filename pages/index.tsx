@@ -101,6 +101,9 @@ export function sendChat(username: string, color: string, msg: string) {
 }
 
 export function sendUsernameChange(oldUsername: string, color: string, newUsername: string) {
+  if (oldUsername == newUsername) {
+    return;
+  }
   let chatMsg = {
     tag: oldUsername,
     color: color,
@@ -118,6 +121,9 @@ export function sendUsernameChange(oldUsername: string, color: string, newUserna
   });
 }
 
+
+
+
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
@@ -131,7 +137,11 @@ export default function Home() {
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
   const [time, setTime] = useState(0);
   const [reset, setReset] = useState(false);
-
+  const AlwaysScrollToBottom = () => {
+    const elementRef = useRef();
+    useEffect(() => elementRef.current.scrollIntoView());
+    return <div ref={elementRef} />;
+  };
   useEffect(() => {
     let interval = null;
     if (!reset) {
@@ -312,12 +322,12 @@ export default function Home() {
             <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
               Game Chat
             </div>
-            <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2">
+            <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2 pb-1">
               {chatMsgs.map((chat, index) => (
                   <ChatMessage key={"message-" + index.toString()}
                                {...chat}/>
               ))}
-
+              <AlwaysScrollToBottom />
             </div>
             <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
             <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
@@ -428,11 +438,15 @@ export default function Home() {
               <Timer time={time} />
             </div>
             <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
+
+
+
               {rounds.current.slice().reverse().map((round, index) => (
                   <HistoryInfo key={"history-" + index.toString()}
                       {...round}/>
               ))}
               <div className="mb-3"/>
+
             </div>
 
             <Controls username={username} />
