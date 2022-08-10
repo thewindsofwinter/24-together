@@ -42,7 +42,6 @@ export default function DesktopApp(props: Props) {
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
       <div className={styles.wrapper}>
 
       {/*player/chat*/}
@@ -75,8 +74,11 @@ export default function DesktopApp(props: Props) {
         </button>
         </div>
       </div>
-        <div className="p-4 flex flex-col">
-          <div className="basis-8">
+        <div className="flex flex-col">
+          <div className="text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-t-2xl">
+            <Timer time={time} />
+          </div>
+          <div className="basis-8 p-4">
             <button type="button"
                     className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
                <img className="w-5 h-5" src="/arrow-icon.svg" />
@@ -88,11 +90,8 @@ export default function DesktopApp(props: Props) {
               Set {setCount}, Attempt {attemptCount}
             </div>
 
-            <div className="basis-8 grow-0 shrink-0 text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-tr-2xl">
-              <Timer time={time} />
-            </div>
           </div>
-          <div className="basis-4/5 grow">
+          <div className="basis-4/5 grow p-4">
             <div className="flex flex-wrap -mb-4 -mx-2 w-full">
               {cards.map((card, index) => (
                   <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
@@ -147,7 +146,7 @@ export default function DesktopApp(props: Props) {
             }}>I found 24!</button>
           </div>
 
-          <div className="text-xs basis-8 mx-auto mt-2" id="instructions">
+          <div className="text-xs basis-8 mx-auto mt-2 p-4 pt-0" id="instructions">
             <strong>Instructions:</strong> For each round, enter the point values of all four cards
             with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
             parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be

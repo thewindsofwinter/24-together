@@ -182,3 +182,13 @@ aspect ratio of 2:1 (side areas)
   border-bottom: 2px solid var(--primary);
   outline:none;
 }
+
+
+@media (max-width: 48rem) {
+  .toggleSubmit {
+    flex-basis: 40%;
+  }
+  .input {
+    flex-basis: 60%;
+  }
+}
