@@ -1,3 +1,5 @@
+import mexp from 'math-expression-evaluator'
+
 export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("received " + input)
   for(var i = 0; i < input.length; i++) {

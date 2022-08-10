@@ -1,15 +1,10 @@
 import Head from 'next/head'
 import Pusher from 'pusher-js'
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styles from '../styles/Home.module.css'
-import mexp from 'math-expression-evaluator'
-import Timer from '../components/timer'
-import Card, { CardType } from '../components/card'
-import HistoryInfo, { RoundInfo } from '../components/history'
-import Controls, { updateCardDB } from '../components/controls'
-import ChatMessage, { MessageInfo } from '../components/chat'
-import { sendChat, sendUsernameChange } from '../lib/pusher-funcs.ts'
-import { verifyOperations } from '../lib/math-funcs.ts'
+import DesktopApp from '../components/desktop'
+import MobileApp from '../components/mobile'
+import { sendUsernameChange } from '../lib/pusher-funcs.ts'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
@@ -25,13 +20,47 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)]
+// Hook
+function useWindowSize() {
+  // Initialize state with undefined width/height so server and client renders match
+  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+
+  useEffect(() => {
+    // only execute all the code below in client side
+    if (typeof window !== 'undefined') {
+      // Handler to call on window resize
+      function handleResize() {
+        // Set window width/height to state
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      }
+
+      // Add event listener
+      window.addEventListener("resize", handleResize);
+
+      // Call handler right away so state gets updated with initial window size
+      handleResize();
+
+      // Remove event listener on cleanup
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []); // Empty array ensures that effect is only run on mount
+  return windowSize;
+}
+
 
 export function resize(hide: HTMLElement, txt: HTMLInputElement) {
   hide.textContent = txt.value;
   txt.style.width = (hide.offsetWidth + 1) + "px";
 }
 
+const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)];
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
   const [score, setScore] = useState<number>(0);
@@ -45,11 +74,8 @@ export default function Home() {
   const [submitToggle, setSubmitToggle] = useState<boolean>(false);
   const [time, setTime] = useState(0);
   const [reset, setReset] = useState(false);
-  const scrollBottomRef = useRef(null);
-  const scrollToBottom = () => {
-    scrollBottomRef.current.scrollIntoView({ behavior: "smooth" });
-  };
-  useEffect(scrollToBottom, [chatMsgs]);
+  const size = useWindowSize();
+
   useEffect(() => {
     let interval = null;
     if (!reset) {
@@ -92,6 +118,7 @@ export default function Home() {
         document.getElementById("send").click();
       }
     });
+
     let suffix = String(new Date().getTime()).substr(-3)
     // 0.7% chance
     if(parseInt(suffix) > 992) {
@@ -225,138 +252,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}><span className={styles.accent}>Play 24</span> Together</h1>
-        <div className={styles.wrapper}>
+      {
+        size.width > 768 ? <DesktopApp username={username} score={score} setCount={setCount}
+        attemptCount={attemptCount} cards={cards} rounds={rounds} time={time}
+        chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor} />
+        : <MobileApp username={username} score={score} setCount={setCount}
+        attemptCount={attemptCount} cards={cards} rounds={rounds} time={time}
+        chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor} />
+      }
 
-          {/*player/chat*/}
-          <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50">
-            <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
-              Game Chat
-            </div>
-            <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2 pb-1">
-              {chatMsgs.map((chat, index) => (
-                  <ChatMessage key={"message-" + index.toString()}
-                               {...chat}/>
-              ))}
-              <div id="scroll-to-bottom" className="float-left clear-both" ref={scrollBottomRef}/>
-            </div>
-            <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
-            <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
-              <span className="font-bold">
-                <span id="hide"></span>
-                <input id="txt" className={styles.usernameInput}></input>:
-              </span>
-            </div>
-            <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
-            <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
-              let chat = document.getElementById("chat") as HTMLInputElement;
-              //should prolly filter chat at some point xd
-              sendChat(username, chatColor, chat.value);
-              chat.value = "";
-            }}>
-              <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
-            </button>
-            </div>
-          </div>
-
-
-          <div className="basis-3/5 p-4 flex flex-col">
-            <div className="basis-8">
-              <button type="button"
-                      className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
-                 <img className="w-5 h-5" src="/arrow-icon.svg" />
-                <span className="sr-only">Information Button</span>
-              </button>
-
-
-              <div className="p-4 pt-0 basis-8 grow-0 shrink-0 text-black text-center text-4xl font-bold">
-                Set {setCount}, Attempt {attemptCount}
-              </div>
-            </div>
-            <div className="basis-4/5 grow">
-              <div className="flex flex-wrap -mb-4 -mx-2 w-full">
-                {cards.map((card, index) => (
-                    <Card suit={card.suit} val={card.value} key={"card" + index.toString()} small={false}></Card>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-4 basis-8 grow-0 shrink-0 text-black text-center text-2xl font-bold">
-              {score} {score === 1 ? "point" : "points"}
-            </div>
-
-            <div className={styles.inputBar}>
-              <input className={styles.input} id="input"></input>
-              <button className={submitToggle ? styles.hovered + ' ' + styles.toggleSubmit
-                : styles.toggleSubmit} id="submit" onClick={() => {
-                let input = document.getElementById("input") as HTMLInputElement;
-
-                let code = verifyOperations(input.value, cards).split('-');
-                let thisRound = {
-                  values: cards,
-                  color: 0,
-                  message: "",
-                  query: "Query: \"" + input.value + "\" by " + username
-                  + " after " + (time - time%10)/1000 + " seconds",
-                  label: "Set #" + setCount + ", Attempt " + attemptCount
-                }
-                console.log(thisRound)
-
-                if(code[0] == "correct") {
-                  thisRound.message = "Correct!";
-                }
-                else if(code[0] == "incorrect") {
-                  thisRound.message = "Incorrect!";
-                  thisRound.color = 1;
-                }
-                else {
-                  thisRound.message = "Invalid: " + code[1];
-                  thisRound.color = 2;
-                }
-
-                console.log(JSON.stringify(thisRound))
-                // send info, answer not important
-                fetch("/api/pusher", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(thisRound),
-                });
-
-                input.value = "";
-              }}>{submitText}</button>
-            </div>
-
-            <div className="text-xs basis-8 mx-auto mt-2" id="instructions">
-              <strong>Instructions:</strong> For each round, enter the point values of all four cards
-              with a valid mathematical combination of basic operators <code>[+, -, *, /]</code> and
-              parentheses <code>[(, )]</code> which evaluates to 24. All rounds are guaranteed to be
-              solvable. Submit your answer before all your opponents to win the round!&nbsp;
-              <a className={styles.hideButton} onClick={() =>
-                { document.getElementById("instructions").style.display = "none"; }
-              }>[hide]</a>
-            </div>
-          </div>
-          {/*timer/history*/}
-          <div className="basis-1/5 bg-accent rounded-r-2xl flex flex-col bg-green-50">
-            <div className="basis-8 grow-0 shrink-0 text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-tr-2xl">
-              <Timer time={time} />
-            </div>
-            <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
-              {rounds.current.slice().reverse().map((round, index) => (
-                  <HistoryInfo key={"history-" + index.toString()}
-                      {...round}/>
-              ))}
-              <div className="mb-3"/>
-
-            </div>
-
-            <Controls username={username} />
-          </div>
-          </div>
-        </main>
     </div>
   )
 }
