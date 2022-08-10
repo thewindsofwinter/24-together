@@ -182,6 +182,9 @@ export default function Home() {
           set(ref(database, 'attempt/'), 1);
           return 1;
         })
+
+        setScore((score) => { return score + 1; });
+        updateCardDB();
       }
       else {
         setAttemptCount((attemptCount) => {
@@ -213,8 +216,6 @@ export default function Home() {
       set(ref(database, 'attempt/'), 1);
       setAttemptCount(1);
     });
-
-
   }, [])
 
   return (
@@ -256,9 +257,6 @@ export default function Home() {
             }}>
               <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
             </button>
-
-
-
             </div>
           </div>
 
@@ -307,8 +305,6 @@ export default function Home() {
 
                 if(code[0] == "correct") {
                   thisRound.message = "Correct!";
-                  setScore(score + 1);
-                  updateCardDB();
                 }
                 else if(code[0] == "incorrect") {
                   thisRound.message = "Incorrect!";
