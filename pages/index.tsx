@@ -8,6 +8,8 @@ import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 import Controls, { updateCardDB } from '../components/controls'
 import ChatMessage, { MessageInfo } from '../components/chat'
+import { sendChat, sendUsernameChange } from '../lib/pusher-funcs.ts'
+import { verifyOperations } from '../lib/math-funcs.ts'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
@@ -25,104 +27,10 @@ const database = getDatabase(app);
 
 const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)]
 
-export function verifyOperations(input: string, cards: CardType[]): string {
-  console.log("received " + input)
-  for(var i = 0; i < input.length; i++) {
-    let char = input.charAt(i);
-    if(char !== '+' && char !== '-' && char !== '*' && char !== '/' && char !== '('
-        && char !== ')' && char !== ' ' && !(char >= '0' && char <= '9')) {
-      return "invalid-Bad Character";
-    }
-  }
-
-  // Check if the string can be split for cards
-  let found = [false, false, false, false]
-  let tokens = input.split(/\D/)
-  for(var i = 0; i < tokens.length; i++) {
-    if(tokens[i] !== "") {
-      let val = parseInt(tokens[i]);
-      let ok = false;
-      for(var j = 0; j < 4; j++) {
-        if(!found[j] && cards[j].value === val) {
-          found[j] = true;
-          ok = true;
-          break;
-        }
-      }
-
-      if(!ok) {
-        return "invalid-Extra Number";
-      }
-    }
-  }
-
-  for(var i = 0; i < 4; i++) {
-    if(!found[i]) {
-      return "invalid-Missing Number";
-    }
-  }
-
-  try {
-    let val = mexp.eval(input);
-    console.log("valid and evaluated: " + val);
-    if(val === 24) {
-      return "correct"
-    }
-    else {
-      return "incorrect"
-    }
-  }
-  catch(e){
-    return "invalid-Bad Expression";
-  }
-}
-
 export function resize(hide: HTMLElement, txt: HTMLInputElement) {
   hide.textContent = txt.value;
   txt.style.width = (hide.offsetWidth + 1) + "px";
 }
-
-export function sendChat(username: string, color: string, msg: string) {
-  let chatMsg = {
-    tag: username + ":",
-    color: color,
-    message: msg,
-
-  }
-  console.log("CHAT MESSAGE: " + chatMsg.message);
-
-  fetch("/api/pusher-chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(chatMsg),
-  });
-}
-
-export function sendUsernameChange(oldUsername: string, color: string, newUsername: string) {
-  if (oldUsername == newUsername) {
-    return;
-  }
-  let chatMsg = {
-    tag: oldUsername,
-    color: color,
-    message: "set their username to \'" + newUsername + "\'",
-
-  }
-  console.log("CHAT MESSAGE: " + chatMsg.message);
-
-  fetch("/api/pusher-chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(chatMsg),
-  });
-}
-
-
-
 
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
@@ -441,9 +349,6 @@ export default function Home() {
               <Timer time={time} />
             </div>
             <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
-
-
-
               {rounds.current.slice().reverse().map((round, index) => (
                   <HistoryInfo key={"history-" + index.toString()}
                       {...round}/>
