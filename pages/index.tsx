@@ -55,12 +55,6 @@ function useWindowSize() {
   return windowSize;
 }
 
-
-export function resize(hide: HTMLElement, txt: HTMLInputElement) {
-  hide.textContent = txt.value;
-  txt.style.width = (hide.offsetWidth + 1) + "px";
-}
-
 const chatColor = ['text-red-600', 'text-green-600', 'text-blue-600', 'text-pink-400', 'text-purple-700'][Math.floor(Math.random() * 5)];
 export default function Home() {
   const [username, setUsername] = useState<string>("birb");
@@ -76,6 +70,19 @@ export default function Home() {
   const [time, setTime] = useState(0);
   const [reset, setReset] = useState(false);
   const size = useWindowSize();
+
+  const updateChatLabel = () => {
+    setUsername((username) => {
+      sendUsernameChange(username, chatColor, txt.value);
+      return txt.value;
+    });
+    // send message that username has changed
+  };
+
+  const buttonAnimate = () => {
+    setSubmitToggle(true);
+    setTimeout(function() { setSubmitToggle(false); }, 200);
+  }
 
   useEffect(() => {
     let interval = null;
@@ -96,29 +103,6 @@ export default function Home() {
 
   // head off hydration problem
   useEffect(() => {
-    // Get the input field
-    var input = document.getElementById("input");
-    var chat = document.getElementById("chat");
-    // Execute a function when the user presses a key on the keyboard
-    input.addEventListener("keypress", function(event) {
-      // If the user presses the "Enter" key on the keyboard
-      if (event.key === "Enter") {
-        // Cancel the default action, if needed
-        event.preventDefault();
-        // Trigger the button element with a click
-        setSubmitToggle(true);
-        document.getElementById("submit").click();
-        setTimeout(function() { setSubmitToggle(false); }, 200);
-      }
-    });
-    chat.addEventListener("keypress", function(event) {
-      // If the user presses the "Enter" key on the keyboard
-      if (event.key === "Enter") {
-        // Cancel the default action, if needed
-        event.preventDefault();
-        document.getElementById("send").click();
-      }
-    });
 
     let suffix = String(new Date().getTime()).substr(-3)
     // 0.7% chance
@@ -126,23 +110,6 @@ export default function Home() {
       suffix = "ket"
     }
     setUsername("birb-" + suffix)
-
-    const hide = document.getElementById('hide') as HTMLElement;
-    const txt = document.getElementById('txt') as HTMLInputElement;
-    txt.value = "birb-" + suffix;
-
-    resize(hide, txt);
-    txt.addEventListener("input", function() {
-      resize(hide, txt);
-    });
-
-    txt.addEventListener("blur", function() {
-      setUsername((username) => {
-        sendUsernameChange(username, chatColor, txt.value);
-        return txt.value;
-      });
-      // send message that username has changed
-    })
 
     rounds.current = [];
     setChatMsgs([{
@@ -256,10 +223,12 @@ export default function Home() {
       {
         size.width > 768 ? <DesktopApp username={username} score={score} setCount={setCount}
         attemptCount={attemptCount} cards={cards} rounds={rounds} time={time}
-        chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor} />
+        chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor}
+        updateChatLabel={updateChatLabel} buttonAnimate={buttonAnimate}/>
         : <MobileApp username={username} score={score} setCount={setCount}
         attemptCount={attemptCount} cards={cards} rounds={rounds} time={time}
-        chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor} />
+        chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor}
+        updateChatLabel={updateChatLabel} buttonAnimate={buttonAnimate} />
       }
 
     </div>

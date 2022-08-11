@@ -19,7 +19,14 @@ type Props = {
     chatMsgs: MessageInfo[],
     submitToggle: boolean,
     time: number,
-    chatColor: string
+    chatColor: string,
+    buttonAnimate: () => void,
+    updateChatLabel: () => void
+}
+
+export function resize(hide: HTMLElement, txt: HTMLInputElement) {
+  hide.textContent = txt.value;
+  txt.style.width = (hide.offsetWidth + 1) + "px";
 }
 
 export default function DesktopApp(props: Props) {
@@ -33,12 +40,50 @@ export default function DesktopApp(props: Props) {
   let submitToggle = props.submitToggle;
   let time = props.time;
   let chatColor = props.chatColor;
+  let buttonAnimate = props.buttonAnimate;
+  let updateChatLabel = props.updateChatLabel;
 
   const scrollBottomRef = useRef(null);
   const scrollToBottom = () => {
     scrollBottomRef.current.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(scrollToBottom, [chatMsgs]);
+
+  useEffect(() => {
+    // Get the input field
+    var input = document.getElementById("input");
+    var chat = document.getElementById("chat");
+    // Execute a function when the user presses a key on the keyboard
+    input.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("submit").click();
+        buttonAnimate();
+      }
+    });
+    chat.addEventListener("keypress", function(event) {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        document.getElementById("send").click();
+      }
+    });
+
+    const hide = document.getElementById('hide') as HTMLElement;
+    const txt = document.getElementById('txt') as HTMLInputElement;
+
+    txt.addEventListener("input", function() {
+      resize(hide, txt);
+    });
+
+    txt.addEventListener("blur", function() {
+      updateChatLabel();
+    })
+  }, []);
 
   return (
     <main className={styles.main}>
@@ -158,6 +203,9 @@ export default function DesktopApp(props: Props) {
 
           <Controls username={username} />
         </div>
+        </div>
+        <div className="basis-8 absolute bottom-0 pt-2 pl-1 pr-1">
+          {rounds.current.length > 0 ? <HistoryInfo {rounds.current[0]}/> : null }
         </div>
       </main>
   );
