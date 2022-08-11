@@ -36,16 +36,23 @@ function useWindowSize() {
       // Handler to call on window resize
 
       // Add event listener
-      window.addEventListener("resize", setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      }));
+      window.addEventListener("resize", function(event) {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        })
+      });
 
       // Call handler right away so state gets updated with initial window size
       handleResize();
 
       // Remove event listener on cleanup
-      return () => window.removeEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", function(event) {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        })
+      }));
     }
   }, []); // Empty array ensures that effect is only run on mount
   return windowSize;
