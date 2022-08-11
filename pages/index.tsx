@@ -80,7 +80,7 @@ export default function Home() {
   const [reset, setReset] = useState(false);
   const size = useWindowSize();
 
-  const updateChatLabel = () => {
+  const updateChatLabel = (txt: HTMLInputElement) => {
     setUsername((username) => {
       sendUsernameChange(username, chatColor, txt.value);
       return txt.value;

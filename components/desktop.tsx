@@ -21,7 +21,7 @@ type Props = {
     time: number,
     chatColor: string,
     buttonAnimate: () => void,
-    updateChatLabel: () => void
+    updateChatLabel: (txt: HTMLInputElement) => void
 }
 
 export function resize(hide: HTMLElement, txt: HTMLInputElement) {
@@ -81,7 +81,7 @@ export default function DesktopApp(props: Props) {
       });
 
       txt.addEventListener("blur", function() {
-        updateChatLabel();
+        updateChatLabel(txt);
       })
   }, []);
 
