@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import DesktopApp from '../components/desktop'
 import MobileApp from '../components/mobile'
 import { updateCardDB } from '../components/controls'
-import { sendUsernameChange } from '../lib/pusher-funcs.ts'
+import { sendUsernameChange } from '../lib/pusher-funcs'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
