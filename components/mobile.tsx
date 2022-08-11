@@ -212,7 +212,7 @@ export default function DesktopApp(props: Props) {
           <Controls username={username} />
         </div>
         </div>
-        <div className={"basis-8 absolute top-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out z-20" : "opacity-0 transition-all duration-500 ease-in-out z-0")}>
+        <div className={"basis-8 absolute top-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out z-20" : "opacity-0 transition-all duration-500 ease-in-out z-20 select-none")}>
           {rounds.length > 0 ?
               <HistoryInfo {...rounds[rounds.length - 1]}/> : null }
         </div>
