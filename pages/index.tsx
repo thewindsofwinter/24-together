@@ -44,7 +44,10 @@ function useWindowSize() {
       });
 
       // Call handler right away so state gets updated with initial window size
-      handleResize();
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
 
       // Remove event listener on cleanup
       return () => window.removeEventListener("resize", function(event) {
