@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/Home.module.css'
 import Timer from '../components/timer'
 import Card, { CardType } from '../components/card'
@@ -42,6 +42,7 @@ export default function DesktopApp(props: Props) {
   let chatColor = props.chatColor;
   let buttonAnimate = props.buttonAnimate;
   let updateChatLabel = props.updateChatLabel;
+  let [fade, setFade] = useState<boolean>(false);
 
   const scrollBottomRef = useRef(null);
   const scrollToBottom = () => {
@@ -84,6 +85,13 @@ export default function DesktopApp(props: Props) {
       updateChatLabel();
     })
   }, []);
+
+  useEffect(() => {
+    setFade(true);
+    setTimeout(() => {
+      setFade(false);
+    }, 2000);
+  }, [attemptCount]);
 
   return (
     <main className={styles.main}>
@@ -204,8 +212,9 @@ export default function DesktopApp(props: Props) {
           <Controls username={username} />
         </div>
         </div>
-        <div className="basis-8 absolute bottom-0 pt-2 pl-1 pr-1">
-          {rounds.current.length > 0 ? <HistoryInfo {rounds.current[0]}/> : null }
+        <div className={"basis-8 absolute bottom-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out" : "opacity-0 transition-all duration-500 ease-in-out")}>
+          {rounds.current.length > 0 ?
+              <HistoryInfo {...rounds.current[rounds.current.length - 1]}/> : null }
         </div>
       </main>
   );
