@@ -4,6 +4,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import styles from '../styles/Home.module.css'
 import DesktopApp from '../components/desktop'
 import MobileApp from '../components/mobile'
+import { CardType } from '../components/card'
+import { RoundInfo } from '../components/history'
+import { MessageInfo } from '../components/chat'
 import { updateCardDB } from '../components/controls'
 import { sendUsernameChange } from '../lib/pusher-funcs'
 import { child, get, getDatabase, onChildChanged, onValue, ref, set } from "firebase/database";
