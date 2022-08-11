@@ -1,4 +1,5 @@
 import mexp from 'math-expression-evaluator'
+import { CardType } from '../components/card'
 
 export function verifyOperations(input: string, cards: CardType[]): string {
   console.log("received " + input)
