@@ -6,8 +6,8 @@ import Card, { CardType } from '../components/card'
 import HistoryInfo, { RoundInfo } from '../components/history'
 import Controls, { updateCardDB } from '../components/controls'
 import ChatMessage, { MessageInfo } from '../components/chat'
-import { sendChat } from '../lib/pusher-funcs.ts'
-import { verifyOperations } from '../lib/math-funcs.ts'
+import { sendChat } from '../lib/pusher-funcs'
+import { verifyOperations } from '../lib/math-funcs'
 
 type Props = {
     username: string,
