@@ -222,11 +222,11 @@ export default function Home() {
 
       {
         size.width > 768 ? <DesktopApp username={username} score={score} setCount={setCount}
-        attemptCount={attemptCount} cards={cards} rounds={rounds} time={time}
+        attemptCount={attemptCount} cards={cards} rounds={rounds.current} time={time}
         chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor}
         updateChatLabel={updateChatLabel} buttonAnimate={buttonAnimate}/>
         : <MobileApp username={username} score={score} setCount={setCount}
-        attemptCount={attemptCount} cards={cards} rounds={rounds} time={time}
+        attemptCount={attemptCount} cards={cards} rounds={rounds.current} time={time}
         chatMsgs={chatMsgs} submitToggle={submitToggle} chatColor={chatColor}
         updateChatLabel={updateChatLabel} buttonAnimate={buttonAnimate} />
       }

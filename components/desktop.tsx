@@ -214,7 +214,7 @@ export default function DesktopApp(props: Props) {
             <Timer time={time} />
           </div>
           <div className="basis-8 grow shrink overflow-y-scroll space-y-8 pt-2 pl-1 pr-1">
-            {rounds.current.slice().reverse().map((round, index) => (
+            {rounds.slice().reverse().map((round, index) => (
                 <HistoryInfo key={"history-" + index.toString()}
                     {...round}/>
             ))}

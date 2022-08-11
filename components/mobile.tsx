@@ -213,8 +213,8 @@ export default function DesktopApp(props: Props) {
         </div>
         </div>
         <div className={"basis-8 absolute bottom-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out" : "opacity-0 transition-all duration-500 ease-in-out")}>
-          {rounds.current.length > 0 ?
-              <HistoryInfo {...rounds.current[rounds.current.length - 1]}/> : null }
+          {rounds.length > 0 ?
+              <HistoryInfo {...rounds[rounds.length - 1]}/> : null }
         </div>
       </main>
   );
