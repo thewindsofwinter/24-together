@@ -52,7 +52,7 @@ function useWindowSize() {
           width: window.innerWidth,
           height: window.innerHeight,
         })
-      }));
+      });
     }
   }, []); // Empty array ensures that effect is only run on mount
   return windowSize;
