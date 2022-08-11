@@ -98,7 +98,7 @@ export default function DesktopApp(props: Props) {
       <div className={styles.wrapper}>
 
       {/*player/chat*/}
-      <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50 hidden">
+      <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50 hidden z-10">
         <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
           Game Chat
         </div>
@@ -212,7 +212,7 @@ export default function DesktopApp(props: Props) {
           <Controls username={username} />
         </div>
         </div>
-        <div className={"basis-8 absolute bottom-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out" : "opacity-0 transition-all duration-500 ease-in-out")}>
+        <div className={"basis-8 absolute top-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out z-20" : "opacity-0 transition-all duration-500 ease-in-out z-0")}>
           {rounds.length > 0 ?
               <HistoryInfo {...rounds[rounds.length - 1]}/> : null }
         </div>
