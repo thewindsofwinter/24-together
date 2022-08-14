@@ -25,12 +25,12 @@
 }
 
 .title {
-  width: 95vw;
+  width: 90vw;
   max-width: 160vh;
   color: var(--title);
   font-family: "Encode Sans SC", sans-serif;
   text-transform: capitalize;
-  font-size: min(6.75vh, 5rem);
+  font-size: min(6.75vh, 4vw);
   text-align:right;
   margin-top: 0;
   margin-bottom: 1vh;
@@ -43,7 +43,7 @@ the bottom of the screen
 */
 .wrapper {
   font-family: "Open Sans", sans-serif;
-  width: 95vw;
+  width: 90vw;
   max-width: 160vh;
   background-color: white;
   border-radius: 1rem;
@@ -176,9 +176,29 @@ aspect ratio of 2:1 (side areas)
   background: none;
   border-bottom: 2px dotted var(--primary);
   margin-right: 1px;
+  border-radius: 0px;
 }
 
 .usernameInput:focus {
   border-bottom: 2px solid var(--primary);
   outline:none;
+}
+
+
+@media (max-width: 48rem) {
+  .toggleSubmit {
+    flex-basis: 40%;
+  }
+  .input {
+    flex-basis: 60%;
+  }
+}
+
+@media (max-width: 30rem) {
+  .toggleSubmit {
+    font-size: 1rem;
+  }
+  .input {
+    font-size: 1rem;
+  }
 }

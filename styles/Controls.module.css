@@ -26,3 +26,9 @@
 .nextSet {
   border-radius: 0 0 1rem 0;
 }
+
+@media (max-width: 48rem) {
+  .newGame {
+    border-radius: 0 0 0 1rem;
+  }
+}
