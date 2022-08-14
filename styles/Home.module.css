@@ -25,12 +25,12 @@
 }
 
 .title {
-  width: 95vw;
+  width: 90vw;
   max-width: 160vh;
   color: var(--title);
   font-family: "Encode Sans SC", sans-serif;
   text-transform: capitalize;
-  font-size: min(6.75vh, 5rem);
+  font-size: min(6.75vh, 4vw);
   text-align:right;
   margin-top: 0;
   margin-bottom: 1vh;
@@ -43,7 +43,7 @@ the bottom of the screen
 */
 .wrapper {
   font-family: "Open Sans", sans-serif;
-  width: 95vw;
+  width: 90vw;
   max-width: 160vh;
   background-color: white;
   border-radius: 1rem;
