@@ -139,7 +139,7 @@ export default function DesktopApp(props: Props) {
             </button>
 
 
-            <div className="p-4 pt-0 basis-8 grow-0 shrink-0 text-black text-center text-4xl font-bold">
+            <div className="p-4 py-2 sm:pt-0 sm:pb-4 basis-8 grow-0 shrink-0 text-black text-center text-3xl sm:text-4xl font-bold">
               Set {setCount}, Attempt {attemptCount}
             </div>
 
