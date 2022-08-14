@@ -46,7 +46,9 @@ export default function DesktopApp(props: Props) {
 
   const scrollBottomRef = useRef(null);
   const scrollToBottom = () => {
-    scrollBottomRef.current.scrollIntoView({ behavior: "smooth" });
+    if(scrollBottomRef != null) {
+      scrollBottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
   useEffect(scrollToBottom, [chatMsgs]);
 
