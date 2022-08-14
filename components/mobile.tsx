@@ -93,52 +93,52 @@ export default function DesktopApp(props: Props) {
     }, 2000);
   }, [attemptCount]);
 
+  useEffect(() => {
+    const hide = document.getElementById('hide') as HTMLElement;
+    const txt = document.getElementById('txt') as HTMLInputElement;
+    txt.value = username;
+
+    resize(hide, txt);
+  }, [username]);
+
   return (
     <main className={styles.main}>
       <div className={styles.wrapper}>
-
-      {/*player/chat*/}
-      <div className="basis-1/5 bg-accent rounded-l-2xl flex flex-col bg-gray-50 hidden z-10">
-        <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl py-6 p-4 rounded-tl-xl">
-          Game Chat
-        </div>
-        <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2 pb-1">
-          {chatMsgs.map((chat, index) => (
-              <ChatMessage key={"message-" + index.toString()}
-                           {...chat}/>
-          ))}
-          <div id="scroll-to-bottom" className="float-left clear-both" ref={scrollBottomRef}/>
-        </div>
-        <div className="flex flex-row border-2 rounded-bl-xl border-gray-300 bg-gray-300">
-        <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
-          <span className="font-bold">
-            <span id="hide"></span>
-            <input id="txt" className={styles.usernameInput}></input>:
-          </span>
-        </div>
-        <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
-        <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
-          let chat = document.getElementById("chat") as HTMLInputElement;
-          //should prolly filter chat at some point xd
-          sendChat(username, chatColor, chat.value);
-          chat.value = "";
-        }}>
-          <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
-        </button>
-        </div>
-      </div>
         <div className="flex flex-col w-full">
-          <div className="text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-t-2xl">
-            <Timer time={time} />
+        <div className="flex flex-col bg-gray-50 rounded-t-2xl">
+          <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl rounded-t-2xl py-6 p-4">
+            Game Chat
           </div>
-          <div className="basis-8 p-4">
-            <button type="button"
-                    className="float-left text-green-700 border-4 border-green-700 hover:bg-green-700 hover:text-white focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center ">
-               <img className="w-5 h-5" src="/arrow-icon.svg" />
-              <span className="sr-only">Information Button</span>
-            </button>
+          <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2 pb-1 min-h-[4rem]">
+            {chatMsgs.map((chat, index) => (
+                <ChatMessage key={"message-" + index.toString()}
+                             {...chat}/>
+            ))}
+            <div id="scroll-to-bottom" className="float-left clear-both" ref={scrollBottomRef}/>
+          </div>
+          <div className="flex flex-row border-2 border-gray-300 bg-gray-300">
+          <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
+            <span className="font-bold">
+              <span id="hide"></span>
+              <input id="txt" className={styles.usernameInput}></input>:
+            </span>
+          </div>
+          <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
+          <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
+            let chat = document.getElementById("chat") as HTMLInputElement;
+            //should prolly filter chat at some point xd
+            sendChat(username, chatColor, chat.value);
+            chat.value = "";
+          }}>
+            <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
+          </button>
+          </div>
+        </div>
+        <div className="text-center text-white bg-teal-900 text-2xl py-6 p-4">
+          <Timer time={time} />
+        </div>
 
-
+        <div className="basis-8 p-4">
             <div className="p-4 py-2 sm:pt-0 sm:pb-4 basis-8 grow-0 shrink-0 text-black text-center text-3xl sm:text-4xl font-bold">
               Set {setCount}, Attempt {attemptCount}
             </div>
