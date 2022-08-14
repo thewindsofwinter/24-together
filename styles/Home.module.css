@@ -198,4 +198,7 @@ aspect ratio of 2:1 (side areas)
   .toggleSubmit {
     font-size: 1rem;
   }
+  .input {
+    font-size: 1rem;
+  }
 }
