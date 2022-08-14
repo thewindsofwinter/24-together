@@ -105,37 +105,32 @@ export default function DesktopApp(props: Props) {
     <main className={styles.main}>
       <div className={styles.wrapper}>
         <div className="flex flex-col w-full">
-        <div className="flex flex-col bg-gray-50 rounded-t-2xl">
-          <div className="basis-8 grow-0 shrink-0 text-center font-black text-teal-900 bg-gray-300 text-2xl rounded-t-2xl py-6 p-4">
-            Game Chat
-          </div>
-          <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2 pb-1 min-h-[4rem]">
-            {chatMsgs.map((chat, index) => (
-                <ChatMessage key={"message-" + index.toString()}
-                             {...chat}/>
-            ))}
-            <div id="scroll-to-bottom" className="float-left clear-both" ref={scrollBottomRef}/>
-          </div>
-          <div className="flex flex-row border-2 border-gray-300 bg-gray-300">
-          <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
-            <span className="font-bold">
-              <span id="hide"></span>
-              <input id="txt" className={styles.usernameInput}></input>:
-            </span>
-          </div>
-          <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
-          <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
-            let chat = document.getElementById("chat") as HTMLInputElement;
-            //should prolly filter chat at some point xd
-            sendChat(username, chatColor, chat.value);
-            chat.value = "";
-          }}>
-            <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
-          </button>
-          </div>
-        </div>
-        <div className="text-center text-white bg-teal-900 text-2xl py-6 p-4">
+        <div className="text-center text-white bg-teal-900 text-2xl rounded-t-2xl py-6 p-4">
           <Timer time={time} />
+        </div>
+        <div className="basis-8 grow shrink overflow-auto space-y-1 pl-2 pb-1 pt-2 min-h-[4rem]">
+          {chatMsgs.map((chat, index) => (
+              <ChatMessage key={"message-" + index.toString()}
+                           {...chat}/>
+          ))}
+          <div id="scroll-to-bottom" className="float-left clear-both" ref={scrollBottomRef}/>
+        </div>
+        <div className="flex flex-row border-2 border-gray-300 bg-gray-300">
+        <div className="min-w-fit bg-none pl-2 pr-2 text-base flex items-center">
+          <span className="font-bold">
+            <span id="hide"></span>
+            <input id="txt" className={styles.usernameInput}></input>:
+          </span>
+        </div>
+        <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
+        <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
+          let chat = document.getElementById("chat") as HTMLInputElement;
+          //should prolly filter chat at some point xd
+          sendChat(username, chatColor, chat.value);
+          chat.value = "";
+        }}>
+          <img src="/right-arrow.svg" className="w-4 h-4 mr-2"/>
+        </button>
         </div>
 
         <div className="basis-8 p-4">
