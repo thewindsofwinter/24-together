@@ -196,12 +196,6 @@ aspect ratio of 2:1 (side areas)
 
 @media (max-width: 30rem) {
   .toggleSubmit {
-    font-size: 1.25rem;
-  }
-}
-
-@media (max-width: 24rem) {
-  .toggleSubmit {
     font-size: 1rem;
   }
 }
