@@ -50,7 +50,7 @@ export default function DesktopApp(props: Props) {
       scrollBottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-  useEffect(scrollToBottom, [chatMsgs]);
+  // useEffect(scrollToBottom, [chatMsgs]);
 
   useEffect(() => {
     // Get the input field
