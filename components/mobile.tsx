@@ -122,7 +122,7 @@ export default function DesktopApp(props: Props) {
             <input id="txt" className={styles.usernameInput}></input>:
           </span>
         </div>
-        <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0" id="chat"></input>
+        <input className="flex-grow border-0 h-12 align-top outline-none p-1 pl-2 text-base w-0	min-w-0 rounded-none" id="chat"></input>
         <button id="send" className="outline-none bg-white min-w-fit" onClick={() => {
           let chat = document.getElementById("chat") as HTMLInputElement;
           //should prolly filter chat at some point xd
@@ -207,7 +207,7 @@ export default function DesktopApp(props: Props) {
           <Controls username={username} />
         </div>
         </div>
-        <div className={"basis-8 absolute top-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out z-20" : "opacity-0 transition-all duration-500 ease-in-out z-20 select-none")}>
+        <div className={"basis-8 sticky top-0 pt-2 pl-1 pr-1 " + ( fade ? "opacity-1 transition-all duration-100 ease-in-out z-20" : "opacity-0 transition-all duration-500 ease-in-out z-20 select-none")}>
           {rounds.length > 0 ?
               <HistoryInfo {...rounds[rounds.length - 1]}/> : null }
         </div>
