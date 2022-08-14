@@ -127,7 +127,7 @@ export default function DesktopApp(props: Props) {
         </button>
         </div>
       </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <div className="text-center text-white bg-teal-900 text-2xl py-6 p-4 rounded-t-2xl">
             <Timer time={time} />
           </div>
