@@ -19,7 +19,7 @@
     "math-expression-evaluator": "^1.4.0",
     "next": "12.2.4",
     "pusher": "^5.1.1-beta",
-    "pusher-js": "^7.4.0",
+    "pusher-js": "^7.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-shadow-scroll": "^2.1.1",
